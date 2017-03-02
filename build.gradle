@@ -1,0 +1,47 @@
+group 'io.sureshg'
+version '1.0'
+
+buildscript {
+    ext.kotlin_version = '1.1.0'
+    ext.java_version = '1.8'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = java_version
+targetCompatibility = java_version
+
+//compileJava {
+//    sourceCompatibility = java_version
+//    targetCompatibility = java_version
+//}
+//
+//compileTestJava {
+//    sourceCompatibility = java_version
+//    targetCompatibility = java_version
+//}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = java_version
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = java_version
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
