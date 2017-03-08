@@ -6,10 +6,11 @@ import org.gradle.language.jvm.tasks.ProcessResources
 import org.jetbrains.kotlin.gradle.dsl.Coroutines.ENABLE
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import kotlinx.coroutines.experimental.*
 import us.kirchmeier.capsule.manifest.CapsuleManifest
 import us.kirchmeier.capsule.spec.ReallyExecutableSpec
 import us.kirchmeier.capsule.task.*
+import kotlin.coroutines.experimental.*
+import kotlinx.coroutines.experimental.*
 
 
 buildscript {
@@ -53,7 +54,6 @@ plugins {
 apply {
     plugin("kotlin")
 }
-
 
 base {
     group = "io.sureshg"
@@ -144,9 +144,42 @@ task<Wrapper>("wrapper") {
 }
 
 /**
+ * A tasks using coroutines.
+ */
+task("fib") {
+    doLast {
+        fib().take(10).forEach(::println)
+    }
+}
+
+task("async") {
+    doLast {
+        runBlocking {
+            launch(CommonPool) {
+                delay(2000)
+                println("Gradle Script Kotlin!")
+            }
+            print("Hello, ")
+            delay(2000)
+        }
+    }
+}
+
+/**
  * Helper/extension functions.
  */
 fun getGskURL(version: String, type: DistributionType = ALL) = "https://repo.gradle.org/gradle/dist-snapshots/gradle-script-kotlin-$version-${type.name.toLowerCase()}.zip"
+
+fun fib() = buildSequence {
+    var a = 0
+    var b = 1
+    while (true) {
+        yield(b)
+        val next = a + b
+        a = b
+        b = next
+    }
+}
 
 fun printHeader() {
     val header = """

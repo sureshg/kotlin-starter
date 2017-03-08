@@ -1,5 +1,7 @@
 package io.sureshg
 
+import kotlinx.coroutines.experimental.*
+
 /**
  * Kotlin class.
  *
@@ -7,5 +9,12 @@ package io.sureshg
  */
 
 fun main(args: Array<String>) {
-    println("Kotlin main!")
+    runBlocking {
+        launch(CommonPool) {
+            delay(1000)
+            println("Kotlin!")
+        }
+        print("Hello, ")
+        delay(1000)
+    }
 }
