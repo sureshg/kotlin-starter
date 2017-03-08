@@ -7,6 +7,9 @@ $ ./gradlew clean :run
 # Display project dependency
 $ ./gradlew dependencyInsight --dependency kotlin-stdlib  --configuration compile
 $ ./gradlew dependencies
+
+# See task tree for build task
+$ ./gradlew :build :taskTree
 ```
 
 #### Maven Google Mirror
