@@ -22,10 +22,11 @@ buildscript {
     kotlinVersion = "1.1.0"
     kotlinxVersion = "0.12"
     javaVersion = JavaVersion.VERSION_1_8
+    kotlinEAPRepo = "http://dl.bintray.com/kotlin/kotlin-eap-1.1"
 
     repositories {
         gradleScriptKotlin()
-        maven { setUrl("http://dl.bintray.com/kotlin/kotlin-eap-1.1") }
+        maven { setUrl(kotlinEAPRepo) }
         mavenCentral()
     }
 
@@ -39,6 +40,7 @@ printHeader()
 val javaVersion: JavaVersion by extra
 val kotlinVersion: String by extra
 val kotlinxVersion: String by extra
+var kotlinEAPRepo: String by extra
 
 plugins {
     java
@@ -95,7 +97,7 @@ configure<KotlinProjectExtension> {
 
 repositories {
     gradleScriptKotlin()
-    maven { setUrl("http://dl.bintray.com/kotlin/kotlin-eap-1.1") }
+    maven { setUrl(kotlinEAPRepo) }
     mavenCentral()
 }
 
