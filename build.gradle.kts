@@ -71,13 +71,6 @@ java {
 }
 
 /**
- * Enable java incremental compilation.
- */
-tasks.withType(JavaCompile::class.java) {
-    options.isIncremental = true
-}
-
-/**
  * Configure application plugin
  */
 application {
@@ -90,6 +83,13 @@ application {
  */
 kotlin {
     experimental.coroutines = ENABLE
+}
+
+/**
+ * Enable java incremental compilation.
+ */
+tasks.withType<JavaCompile> {
+    options.isIncremental = true
 }
 
 /**
@@ -110,6 +110,17 @@ repositories {
 dependencies {
     compile(kotlinModule("stdlib-jre8", kotlinVersion))
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
+}
+
+/**
+ * Show source set.
+ */
+val compileJava: JavaCompile by tasks
+compileJava.doLast {
+    val sourceSets = java().sourceSets
+    sourceSets.forEach {
+        println("Source (${it.name}) : " + sourceSets[it.name].allSource.map { it.name }.joinToString())
+    }
 }
 
 
