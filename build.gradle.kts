@@ -12,7 +12,6 @@ import us.kirchmeier.capsule.task.*
 import kotlin.coroutines.experimental.*
 import kotlinx.coroutines.experimental.*
 
-
 buildscript {
     var javaVersion: JavaVersion by extra
     var kotlinVersion: String by extra
@@ -74,7 +73,7 @@ java {
 /**
  * Configure application plugin
  */
-val app = application {
+application {
     applicationName = "kotlin-starter"
     mainClassName = "io.sureshg.KotlinMainKt"
 }
@@ -122,13 +121,13 @@ tasks.withType<ProcessResources> {
 task<FatCapsule>("makeExecutable") {
     // val appConfig = project.convention.getPlugin(ApplicationPluginConvention::class)
     val minJavaVer = javaVersion.toString()
-    archiveName = app.applicationName
+    archiveName = application().applicationName
     reallyExecutable = ReallyExecutableSpec().trampolining()
     capsuleManifest = CapsuleManifest().apply {
         premainClass = "Capsule"
         mainClass = "Capsule"
-        applicationName = app.applicationName
-        applicationClass = app.mainClassName
+        applicationName = application().applicationName
+        applicationClass = application().mainClassName
         applicationVersion = version
         jvmArgs = listOf("-client")
         args = listOf("$*")
