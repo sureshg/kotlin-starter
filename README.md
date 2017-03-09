@@ -1,7 +1,7 @@
 :rocket: Kotlin Starter Project
 -------------------------
 
-A starter template for my kotlin projects using gradle-script-kotlin!
+A starter template for my kotlin projects using [Gradle Script Kotlin](https://github.com/gradle/gradle-script-kotlin)!
 
 * Generating [AOT type-safe accessors](https://github.com/gradle/gradle-script-kotlin/releases/tag/v0.8.0) in kotlin, 
 
