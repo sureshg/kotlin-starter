@@ -10,6 +10,7 @@ import us.kirchmeier.capsule.spec.ReallyExecutableSpec
 import us.kirchmeier.capsule.task.*
 import kotlin.coroutines.experimental.*
 import kotlinx.coroutines.experimental.*
+import org.gradle.api.tasks.compile.JavaCompile
 
 buildscript {
     var javaVersion: JavaVersion by extra
@@ -70,6 +71,13 @@ java {
 }
 
 /**
+ * Enable java incremental compilation.
+ */
+tasks.withType(JavaCompile::class.java) {
+    options.isIncremental = true
+}
+
+/**
  * Configure application plugin
  */
 application {
@@ -103,6 +111,7 @@ dependencies {
     compile(kotlinModule("stdlib-jre8", kotlinVersion))
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
 }
+
 
 /**
  * Auto expand gradle properties.
