@@ -112,7 +112,7 @@ tasks.withType<ProcessResources> {
     filesMatching("application.yaml") {
         expand(project.properties)
     }
-    onlyIf { false }
+    onlyIf { file("src/main/resources/application.yaml").exists() }
 }
 
 /**

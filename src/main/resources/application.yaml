@@ -1,0 +1,8 @@
+info:
+  build:
+    name: ${name}
+    description: ${description}
+    version: ${version}
+    java-version: ${javaVersion}
+    kotlin-version: ${kotlinVersion}
+    kotlinx-version: ${kotlinxVersion}
