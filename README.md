@@ -1,17 +1,34 @@
 :rocket: Kotlin Starter Project
 -------------------------
 
-```bash
-$ ./gradlew clean :run
+A starter template for my kotlin projects using gradle-script-kotlin!
 
-# Display project dependency
-$ ./gradlew dependencyInsight --dependency kotlin-stdlib  --configuration compile
-$ ./gradlew dependencies
+* Generating [AOT type-safe accessors](https://github.com/gradle/gradle-script-kotlin/releases/tag/v0.8.0) in kotlin, 
 
-# See task tree for build task
-$ ./gradlew :build :taskTree
-```
+    ```bash
+    $ ./gradlew gskGenerateAccessors
+    ```
 
+* Other Tasks
+
+    ```bash
+    # Run the main class.
+    $ ./gradlew clean :run
+    
+    # Display project dependency
+    $ ./gradlew dependencyInsight --dependency kotlin-stdlib  --configuration compile
+    $ ./gradlew dependencies
+    
+    # See task tree for build task
+    $ ./gradlew :build :taskTree
+    ```
+* Another way to configure coroutine
+
+    ```kotlin
+     configure<KotlinProjectExtension> {
+          experimental.coroutines = ENABLE
+      }
+    ```
 #### Maven Google Mirror
 
 ```kotlin

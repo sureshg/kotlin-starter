@@ -4,7 +4,6 @@ import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
 import org.gradle.language.jvm.tasks.ProcessResources
 import org.jetbrains.kotlin.gradle.dsl.Coroutines.ENABLE
-import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import us.kirchmeier.capsule.manifest.CapsuleManifest
 import us.kirchmeier.capsule.spec.ReallyExecutableSpec
@@ -79,19 +78,19 @@ application {
 }
 
 /**
+ * Enable coroutines.
+ */
+kotlin {
+    experimental.coroutines = ENABLE
+}
+
+/**
  * Configure kotlin compiler options.
  */
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = javaVersion.toString()
     }
-}
-
-/**
- * Enable coroutines.
- */
-configure<KotlinProjectExtension> {
-    experimental.coroutines = ENABLE
 }
 
 repositories {
@@ -139,6 +138,7 @@ task<FatCapsule>("makeExecutable") {
  * Generate Gradle Script Kotlin wrapper.
  */
 task<Wrapper>("wrapper") {
+    description = "Generate Gradle wrapper."
     //gradleVersion = "3.5"
     distributionType = ALL
     distributionUrl = getGskURL("3.5-20170305000422+0000")
@@ -148,12 +148,14 @@ task<Wrapper>("wrapper") {
  * A tasks using coroutines.
  */
 task("fib") {
+    description = "A fibonacci task using kotlin generators."
     doLast {
         fib().take(10).forEach(::println)
     }
 }
 
 task("async") {
+    description = "An async task using kotlin coroutines."
     doLast {
         runBlocking {
             launch(CommonPool) {
