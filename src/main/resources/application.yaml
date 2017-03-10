@@ -1,8 +1,10 @@
 info:
   build:
     name: ${name}
+    author: ${author}
     description: ${description}
     version: ${version}
     java-version: ${javaVersion}
     kotlin-version: ${kotlinVersion}
     kotlinx-version: ${kotlinxVersion}
+    spring-boot-version: ${springBootVersion}

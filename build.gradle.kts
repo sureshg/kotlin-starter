@@ -12,26 +12,34 @@ import kotlin.coroutines.experimental.*
 import kotlinx.coroutines.experimental.*
 import org.gradle.api.tasks.compile.JavaCompile
 
+
 buildscript {
     var javaVersion: JavaVersion by extra
     var kotlinVersion: String by extra
     var kotlinxVersion: String by extra
     var kotlinEAPRepo: String by extra
+    var springBootVersion: String by extra
 
     kotlinVersion = "1.1.0"
     kotlinxVersion = "0.12"
     javaVersion = JavaVersion.VERSION_1_8
+    springBootVersion = "2.0.0.BUILD-SNAPSHOT"
     kotlinEAPRepo = "http://dl.bintray.com/kotlin/kotlin-eap-1.1"
 
     repositories {
         gradleScriptKotlin()
         maven { setUrl(kotlinEAPRepo) }
+        maven { setUrl("https://repo.spring.io/snapshot") }
+        maven { setUrl("https://repo.spring.io/milestone") }
         mavenCentral()
     }
 
     dependencies {
         classpath(kotlinModule("gradle-plugin", kotlinVersion))
+        classpath(kotlinModule("allopen", kotlinVersion))
+        classpath(kotlinModule("noarg", kotlinVersion))
         classpath("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
@@ -39,12 +47,16 @@ printHeader()
 val javaVersion: JavaVersion by extra
 val kotlinVersion: String by extra
 val kotlinxVersion: String by extra
-var kotlinEAPRepo: String by extra
+val springBootVersion: String by extra
+val kotlinEAPRepo: String by extra
+val author by project
+
 
 plugins {
     java
     application
     idea
+    `help-tasks`
     id("us.kirchmeier.capsule") version "1.0.2"
     id("com.dorongold.task-tree") version "1.3"
 }
@@ -54,6 +66,9 @@ plugins {
  */
 apply {
     plugin("kotlin")
+    plugin("kotlin-noarg")
+    plugin("kotlin-spring")
+    plugin("org.springframework.boot")
 }
 
 base {
@@ -104,11 +119,14 @@ tasks.withType<KotlinCompile> {
 repositories {
     gradleScriptKotlin()
     maven { setUrl(kotlinEAPRepo) }
+    maven { setUrl("https://repo.spring.io/snapshot") }
+    maven { setUrl("https://repo.spring.io/milestone") }
     mavenCentral()
 }
 
 dependencies {
     compile(kotlinModule("stdlib-jre8", kotlinVersion))
+    compile(kotlinModule("reflect", kotlinVersion))
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
 }
 
@@ -152,6 +170,7 @@ task<FatCapsule>("makeExecutable") {
         args = listOf("$*")
         minJavaVersion = minJavaVer
     }
+    dependsOn("clean")
 }
 
 /**
@@ -163,6 +182,11 @@ task<Wrapper>("wrapper") {
     distributionType = ALL
     distributionUrl = getGskURL("3.5-20170305000422+0000")
 }
+
+/**
+ * Set default task
+ */
+defaultTasks("help")
 
 /**
  * A tasks using coroutines.
@@ -185,6 +209,7 @@ task("async") {
             print("Hello, ")
             delay(2000)
         }
+        println("By ${author ?: "Suresh"}")
     }
 }
 

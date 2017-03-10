@@ -13,7 +13,11 @@
             "distributions": "org.gradle.api.distribution.DistributionContainer",
             "idea": "org.gradle.plugins.ide.idea.model.IdeaModel",
             "kotlin": "org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension",
-            "kapt": "org.jetbrains.kotlin.gradle.plugin.KaptExtension"
+            "kapt": "org.jetbrains.kotlin.gradle.plugin.KaptExtension",
+            "noArg": "org.jetbrains.kotlin.noarg.gradle.NoArgExtension",
+            "allOpen": "org.jetbrains.kotlin.allopen.gradle.AllOpenExtension",
+            "springBoot": "org.springframework.boot.gradle.SpringBootPluginExtension",
+            "dependencyManagement": "io.spring.gradle.dependencymanagement.internal.dsl.StandardDependencyManagementExtension"
         }
     }
 }
