@@ -89,7 +89,7 @@ java {
  * Configure application plugin
  */
 application {
-    applicationName = "kotlin-starter"
+    applicationName = rootProject.name
     mainClassName = "io.sureshg.KotlinMainKt"
 }
 
