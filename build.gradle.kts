@@ -44,13 +44,15 @@ buildscript {
 }
 
 printHeader()
+val author by project
 val javaVersion: JavaVersion by extra
 val kotlinVersion: String by extra
 val kotlinxVersion: String by extra
 val springBootVersion: String by extra
 val kotlinEAPRepo: String by extra
-val author by project
 
+val moshiVersion = "1.4.0"
+val jnrVersion = "3.0.37"
 
 plugins {
     java
@@ -128,6 +130,8 @@ dependencies {
     compile(kotlinModule("stdlib-jre8", kotlinVersion))
     compile(kotlinModule("reflect", kotlinVersion))
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
+    compile("com.squareup.moshi:moshi:$moshiVersion")
+    compile("com.github.jnr:jnr-posix:$jnrVersion")
 }
 
 /**
