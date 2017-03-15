@@ -1,4 +1,3 @@
-import org.gradle.api.JavaVersion.*
 import org.gradle.api.tasks.wrapper.Wrapper
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
@@ -10,7 +9,10 @@ import us.kirchmeier.capsule.spec.ReallyExecutableSpec
 import us.kirchmeier.capsule.task.*
 import kotlin.coroutines.experimental.*
 import kotlinx.coroutines.experimental.*
+import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.api.internal.HasConvention
 import org.gradle.api.tasks.compile.JavaCompile
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 
 buildscript {
@@ -20,8 +22,8 @@ buildscript {
     var kotlinEAPRepo: String by extra
     var springBootVersion: String by extra
 
-    kotlinVersion = "1.1.0"
-    kotlinxVersion = "0.12"
+    kotlinVersion = "1.1.1"
+    kotlinxVersion = "0.13"
     javaVersion = JavaVersion.VERSION_1_8
     springBootVersion = "2.0.0.BUILD-SNAPSHOT"
     kotlinEAPRepo = "http://dl.bintray.com/kotlin/kotlin-eap-1.1"
@@ -35,9 +37,6 @@ buildscript {
     }
 
     dependencies {
-        classpath(kotlinModule("gradle-plugin", kotlinVersion))
-        classpath(kotlinModule("allopen", kotlinVersion))
-        classpath(kotlinModule("noarg", kotlinVersion))
         classpath("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
@@ -50,7 +49,6 @@ val kotlinVersion: String by extra
 val kotlinxVersion: String by extra
 val springBootVersion: String by extra
 val kotlinEAPRepo: String by extra
-
 val moshiVersion = "1.4.0"
 val jnrVersion = "3.0.37"
 
@@ -59,17 +57,25 @@ plugins {
     application
     idea
     `help-tasks`
+    id("org.jetbrains.kotlin.jvm") version "1.1.1"
+    id("org.jetbrains.kotlin.kapt") version "1.1.1"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.1.1"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.1.1"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.1.1"
+    id("org.jetbrains.kotlin.plugin.jpa") version "1.1.1"
+
     id("us.kirchmeier.capsule") version "1.0.2"
     id("com.dorongold.task-tree") version "1.3"
+
+    id("org.springframework.boot") version "1.5.2.RELEASE" apply false
+    id("org.jetbrains.kotlin.android") version "1.1.1" apply false
+    id("org.jetbrains.kotlin.android.extensions") version "1.1.1" apply false
 }
 
 /**
  * Apply third party plugins.
  */
 apply {
-    plugin("kotlin")
-    plugin("kotlin-noarg")
-    plugin("kotlin-spring")
     plugin("org.springframework.boot")
 }
 
@@ -129,22 +135,25 @@ repositories {
 dependencies {
     compile(kotlinModule("stdlib-jre8", kotlinVersion))
     compile(kotlinModule("reflect", kotlinVersion))
-    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
+    compile(kotlinxModule("coroutines-core", kotlinxVersion))
     compile("com.squareup.moshi:moshi:$moshiVersion")
     compile("com.github.jnr:jnr-posix:$jnrVersion")
 }
 
+
 /**
- * Show source set.
+ * Show source sets.
  */
 val compileJava: JavaCompile by tasks
-compileJava.doLast {
-    val sourceSets = java().sourceSets
-    sourceSets.forEach {
-        println("Source (${it.name}) : " + sourceSets[it.name].allSource.map { it.name }.joinToString())
+compileJava.doFirst {
+    println("<====== Source Sets ======>")
+    java().sourceSets.asMap.forEach { name, srcSet ->
+        val ktSrcSet = (srcSet as HasConvention).convention.getPlugin<KotlinSourceSet>()
+        println("Java-${name.capitalize()} => ${srcSet.allSource.srcDirs.map { it.name }}")
+        println("Kotlin-${name.capitalize()} => ${ktSrcSet.kotlin.srcDirs.map { it.name }}")
     }
+    println("<=========================>")
 }
-
 
 /**
  * Auto expand gradle properties.
@@ -190,7 +199,7 @@ task<Wrapper>("wrapper") {
 /**
  * Set default task
  */
-defaultTasks("help")
+defaultTasks("clean", "tasks", "--all")
 
 /**
  * A tasks using coroutines.
@@ -247,4 +256,5 @@ fun printHeader() {
     println()
 }
 
+fun DependencyHandler.kotlinxModule(module: String, version: String = kotlinxVersion) = "org.jetbrains.kotlinx:kotlinx-$module:$version"
 
