@@ -258,3 +258,7 @@ fun printHeader() {
 
 fun DependencyHandler.kotlinxModule(module: String, version: String = kotlinxVersion) = "org.jetbrains.kotlinx:kotlinx-$module:$version"
 
+/**
+ * Extension function to create new task.
+ */
+inline fun <reified T : Task> task(noinline configuration: T.() -> Unit) = tasks.creating(T::class, configuration)
