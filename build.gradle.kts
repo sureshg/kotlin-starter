@@ -13,6 +13,7 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.internal.HasConvention
 import org.gradle.api.tasks.compile.JavaCompile
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 
 buildscript {
@@ -20,17 +21,19 @@ buildscript {
     var kotlinVersion: String by extra
     var kotlinxVersion: String by extra
     var kotlinEAPRepo: String by extra
+    var kotlinxRepo: String by extra
     var springBootVersion: String by extra
 
     kotlinVersion = "1.1.1"
     kotlinxVersion = "0.13"
     javaVersion = JavaVersion.VERSION_1_8
     springBootVersion = "2.0.0.BUILD-SNAPSHOT"
+    kotlinxRepo = "http://dl.bintray.com/kotlin/kotlinx"
     kotlinEAPRepo = "http://dl.bintray.com/kotlin/kotlin-eap-1.1"
 
     repositories {
         gradleScriptKotlin()
-        maven { setUrl(kotlinEAPRepo) }
+        maven { setUrl(kotlinxRepo) }
         maven { setUrl("https://repo.spring.io/snapshot") }
         maven { setUrl("https://repo.spring.io/milestone") }
         mavenCentral()
@@ -48,9 +51,8 @@ val javaVersion: JavaVersion by extra
 val kotlinVersion: String by extra
 val kotlinxVersion: String by extra
 val springBootVersion: String by extra
+var kotlinxRepo: String by extra
 val kotlinEAPRepo: String by extra
-val moshiVersion = "1.4.0"
-val jnrVersion = "3.0.37"
 
 plugins {
     java
@@ -76,7 +78,7 @@ plugins {
  * Apply third party plugins.
  */
 apply {
-    plugin("org.springframework.boot")
+    plugin<SpringBootPlugin>()
 }
 
 base {
@@ -127,17 +129,28 @@ tasks.withType<KotlinCompile> {
 repositories {
     gradleScriptKotlin()
     maven { setUrl(kotlinEAPRepo) }
+    maven { setUrl(kotlinxRepo) }
     maven { setUrl("https://repo.spring.io/snapshot") }
     maven { setUrl("https://repo.spring.io/milestone") }
     mavenCentral()
 }
 
+
+val retrofitVersion = "2.2.0"
+val coroutinesRetrofit = "0.4.1"
+val moshiVersion = "1.4.0"
+val jnrVersion = "3.0.37"
+val immutableCollVersion = "0.1"
+
 dependencies {
     compile(kotlinModule("stdlib-jre8", kotlinVersion))
     compile(kotlinModule("reflect", kotlinVersion))
     compile(kotlinxModule("coroutines-core", kotlinxVersion))
+    compile(kotlinxModule("collections-immutable", immutableCollVersion))
+    compile("com.squareup.retrofit2:retrofit:$retrofitVersion")
     compile("com.squareup.moshi:moshi:$moshiVersion")
     compile("com.github.jnr:jnr-posix:$jnrVersion")
+    compile("ru.gildor.coroutines:kotlin-coroutines-retrofit:$coroutinesRetrofit")
 }
 
 
@@ -196,6 +209,22 @@ task<Wrapper>("wrapper") {
     distributionUrl = getGskURL("3.5-20170305000422+0000")
 }
 
+
+/**
+ * Task rules
+ */
+tasks.addRule("Pattern: extra-<PropName>") {
+    val taskName: String = this
+    if (taskName.startsWith("extra-")) {
+        val task = task(taskName).doLast {
+            val prop = taskName.removePrefix("extra-")
+            val value = project.extra.properties.getOrDefault(prop, "N/A")
+            println("Extension property, $prop : $value")
+        }
+        task.dependsOn(tasks.getByName("clean"))
+    }
+}
+
 /**
  * Set default task
  */
@@ -242,14 +271,15 @@ fun fib() = buildSequence {
     }
 }
 
-fun printHeader() {
+fun printHeader(embdKtVersion: String = embeddedKotlinVersion) {
     val header = """
-                 +-----------------------------+
-                 | Kotlin Starter Build Script |
-                 +-----------------------------+
+                 +-------------------------------+
+                 |  Kotlin Starter Build Script  |
+                 +-------------------------------+
                  """.trimIndent()
     println(header)
-    println("\nConfigured project properties are,")
+    println("\nEmbedded kotlin version: $embdKtVersion")
+    println("Configured project properties are,")
     extra.properties.entries.sortedBy { it.key }.forEach {
         println("%-18s = %-20s".format(it.key, it.value))
     }
