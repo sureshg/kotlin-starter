@@ -25,7 +25,7 @@ buildscript {
     var springBootVersion: String by extra
 
     kotlinVersion = "1.1.1"
-    kotlinxVersion = "0.13"
+    kotlinxVersion = "0.14"
     javaVersion = JavaVersion.VERSION_1_8
     springBootVersion = "2.0.0.BUILD-SNAPSHOT"
     kotlinxRepo = "http://dl.bintray.com/kotlin/kotlinx"
