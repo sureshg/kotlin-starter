@@ -216,7 +216,7 @@ task<Wrapper>("wrapper") {
     description = "Generate Gradle wrapper v0.8"
     //gradleVersion = "3.5"
     distributionType = ALL
-    distributionUrl = getGskURL("3.5-20170404014535+0000")
+    distributionUrl = getGskURL("3.5-20170331195952+0000")
 }
 
 
