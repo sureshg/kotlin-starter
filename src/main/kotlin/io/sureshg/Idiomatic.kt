@@ -1,24 +1,15 @@
 package io.sureshg
 
-import java.util.*
-
 /**
  * Idiomatic kotlin
  *
  * @author Suresh (@sur3shg)
  */
 
-
-fun getDefaultLocate(area: String) = when (area.toLowerCase()) {
-    "germany", "austria" -> Locale.GERMAN
-    "france" -> Locale.FRENCH
-    "china" -> Locale.CHINESE
-    else -> Locale.ENGLISH
-}
-
 fun main(args: Array<String>) {
     //explosivePlaceHolder()
     semValidation("HelloKotlin")
+    println(join("|", listOf("Kotlin", "is", "awesome!")))
 }
 
 fun explosivePlaceHolder(): String = TODO("Will do later!")
@@ -31,17 +22,22 @@ fun semValidation(msg: String) {
     checkNotNull(msg) { "Message can't be null" }
 
     assert(msg.substring(2).equals("kotlin", true)) { "$msg - not a valid message." }
-
-    val (text,url) = Item("","")
 }
 
-sealed class UiOp(val ss: String) {
+data class User(val name: String)
 
-    object show: UiOp("")
-    object hide: UiOp("")
-    data class Test(val a : String) : UiOp(a)
-
+fun anyOrNothing(user: User?) {
+    val name = user?.name ?: throw IllegalStateException("User was null")
+    println("Name is $name")
 }
 
-data class Item(val text: String, val url: String)
+@Deprecated("String strings.joinToString(sep).", ReplaceWith("strings.joinToString(separator = sep)"), level = DeprecationLevel.WARNING)
+fun join(sep: String, strings: List<String>) = strings.joinToString(separator = sep)
+
+sealed class UiOp(val name: String) {
+    object show : UiOp("show")
+    object hide : UiOp("hide")
+    data class Custom(val type: String) : UiOp(type)
+}
+
 

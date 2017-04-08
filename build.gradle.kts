@@ -79,7 +79,11 @@ plugins {
  * Apply third party plugins.
  */
 apply {
-    from("common.gradle.kts")
+    project.rootDir.listFiles().filter {
+        it != project.buildFile && it.name.endsWith(".kts")
+    }.forEach {
+        from(it.name)
+    }
     plugin<SpringBootPlugin>()
     plugin<DependencyManagementPlugin>()
 }
@@ -112,6 +116,7 @@ application {
 kotlin {
     experimental.coroutines = ENABLE
 }
+
 
 /**
  * Enable java incremental compilation.
@@ -211,7 +216,7 @@ task<Wrapper>("wrapper") {
     description = "Generate Gradle wrapper v0.8"
     //gradleVersion = "3.5"
     distributionType = ALL
-    distributionUrl = getGskURL("3.5-20170305000422+0000")
+    distributionUrl = getGskURL("3.5-20170404014535+0000")
 }
 
 
