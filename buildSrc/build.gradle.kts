@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.Delete
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 buildscript {
 
     var kotlinVersion: String by extra
@@ -17,6 +20,15 @@ plugins {
 
 val kotlinVersion: String by extra
 val kotlinEAPRepo: String by extra
+
+/**
+ * Cleaning buildSrc before compilation.
+ */
+afterEvaluate {
+    val clean: Delete by tasks
+    val compileKotlin: KotlinCompile by tasks
+    compileKotlin.dependsOn(clean)
+}
 
 repositories {
     gradleScriptKotlin()
