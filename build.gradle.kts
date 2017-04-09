@@ -206,6 +206,7 @@ task<FatCapsule>("makeExecutable") {
         args = listOf("$*")
         minJavaVersion = minJavaVer
     }
+    description = "Create $archiveName executable."
     dependsOn("clean")
 }
 
@@ -213,7 +214,7 @@ task<FatCapsule>("makeExecutable") {
  * Generate Gradle Script Kotlin wrapper.
  */
 task<Wrapper>("wrapper") {
-    description = "Generate Gradle wrapper v0.8"
+    description = "Generate Gradle Script Kotlin wrapper v0.8"
     //gradleVersion = "3.5"
     distributionType = ALL
     distributionUrl = getGskURL("3.5-20170331195952+0000")
