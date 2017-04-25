@@ -3,6 +3,12 @@
 
 A starter template for my kotlin projects using [Gradle Script Kotlin](https://github.com/gradle/gradle-script-kotlin)!
 
+* Build
+  
+    ```bash
+    $ ./gradlew makeExecutable -q
+    ```
+    
 * Generating [AOT type-safe accessors](https://github.com/gradle/gradle-script-kotlin/releases/tag/v0.8.0) in kotlin, 
 
     ```bash

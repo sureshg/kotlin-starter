@@ -1,5 +1,4 @@
 import org.gradle.api.tasks.wrapper.Wrapper
-import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
 import org.gradle.language.jvm.tasks.ProcessResources
 import org.jetbrains.kotlin.gradle.dsl.Coroutines.ENABLE
@@ -7,27 +6,28 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import us.kirchmeier.capsule.manifest.CapsuleManifest
 import us.kirchmeier.capsule.spec.ReallyExecutableSpec
 import us.kirchmeier.capsule.task.*
-import kotlin.coroutines.experimental.*
 import kotlinx.coroutines.experimental.*
-import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.internal.HasConvention
 import org.gradle.api.tasks.compile.JavaCompile
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
-import org.springframework.boot.gradle.plugin.SpringBootPlugin
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
-
+import org.gradle.jvm.tasks.Jar
+import org.gradle.script.lang.kotlin.*
+import java.util.jar.Attributes
 
 buildscript {
     var javaVersion: JavaVersion by extra
     var kotlinVersion: String by extra
     var kotlinxVersion: String by extra
+    var wrapperVersion: String by extra
     var kotlinEAPRepo: String by extra
     var kotlinxRepo: String by extra
     var springBootVersion: String by extra
 
     javaVersion = JavaVersion.VERSION_1_8
-    kotlinVersion = "1.1.2-eap-44"
+    kotlinVersion = "1.1.2-eap-77"
     kotlinxVersion = "0.14.1"
+    wrapperVersion = "4.0-20170421144052+0000"
     springBootVersion = "2.0.0.BUILD-SNAPSHOT"
     kotlinxRepo = "https://dl.bintray.com/kotlin/kotlinx"
     kotlinEAPRepo = "https://dl.bintray.com/kotlin/kotlin-eap-1.1"
@@ -35,44 +35,42 @@ buildscript {
     repositories {
         gradleScriptKotlin()
         maven { setUrl(kotlinxRepo) }
-        maven { setUrl("https://repo.spring.io/snapshot") }
-        maven { setUrl("https://repo.spring.io/milestone") }
         mavenCentral()
     }
 
     dependencies {
         classpath("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
     }
 }
 
-printHeader()
-val author by project
+val appVersion by project
+val appAuthor by project
 val javaVersion: JavaVersion by extra
 val kotlinVersion: String by extra
 val kotlinxVersion: String by extra
 val springBootVersion: String by extra
 val kotlinxRepo: String by extra
 val kotlinEAPRepo: String by extra
+val wrapperVersion: String by extra
+printHeader(appVersion)
 
 plugins {
-    java
     application
     idea
     `help-tasks`
-    id("org.jetbrains.kotlin.jvm") version "1.1.1"
-    id("org.jetbrains.kotlin.kapt") version "1.1.1"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.1.1"
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.1.1"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.1.1"
-    id("org.jetbrains.kotlin.plugin.jpa") version "1.1.1"
+    val pluginVersion = "1.1.1"
+    id("org.jetbrains.kotlin.jvm") version pluginVersion
+    id("org.jetbrains.kotlin.kapt") version pluginVersion
+    id("org.jetbrains.kotlin.plugin.allopen") version pluginVersion
+    id("org.jetbrains.kotlin.plugin.noarg") version pluginVersion
+    id("org.jetbrains.kotlin.plugin.spring") version pluginVersion
+    id("org.jetbrains.kotlin.plugin.jpa") version pluginVersion
+    id("org.jetbrains.kotlin.android") version pluginVersion apply false
+    id("org.jetbrains.kotlin.android.extensions") version pluginVersion apply false
 
     id("us.kirchmeier.capsule") version "1.0.2"
     id("com.dorongold.task-tree") version "1.3"
-
-    id("org.jetbrains.kotlin.android") version "1.1.1" apply false
-    id("org.jetbrains.kotlin.android.extensions") version "1.1.1" apply false
-    // id("org.springframework.boot") version "1.5.2.RELEASE" apply false
+    id("org.springframework.boot") version "1.5.3.RELEASE"
 }
 
 /**
@@ -84,13 +82,12 @@ apply {
     }.forEach {
         from(it.name)
     }
-    plugin<SpringBootPlugin>()
     plugin<DependencyManagementPlugin>()
 }
 
 base {
     group = "io.sureshg"
-    version = "1.0"
+    version = appVersion
     description = "Gradle script kotlin starter!"
 }
 
@@ -117,7 +114,6 @@ kotlin {
     experimental.coroutines = ENABLE
 }
 
-
 /**
  * Enable java incremental compilation.
  */
@@ -138,8 +134,6 @@ repositories {
     gradleScriptKotlin()
     maven { setUrl(kotlinEAPRepo) }
     maven { setUrl(kotlinxRepo) }
-    maven { setUrl("https://repo.spring.io/snapshot") }
-    maven { setUrl("https://repo.spring.io/milestone") }
     mavenCentral()
 }
 
@@ -161,6 +155,8 @@ dependencies {
     compile("com.squareup.moshi:moshi:$moshiVersion")
     compile("com.github.jnr:jnr-posix:$jnrVersion")
     compile("ru.gildor.coroutines:kotlin-coroutines-retrofit:$coroutinesRetrofit")
+    compile("org.springframework.boot:spring-boot-starter")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
 }
 
 
@@ -169,13 +165,26 @@ dependencies {
  */
 val compileJava: JavaCompile by tasks
 compileJava.doFirst {
-    println("<====== Source Sets ======>")
-    java().sourceSets.asMap.forEach { name, srcSet ->
+    println("====== Source Sets ======")
+    java.sourceSets.asMap.forEach { name, srcSet ->
         val ktSrcSet = (srcSet as HasConvention).convention.getPlugin<KotlinSourceSet>()
         println("Java-${name.capitalize()} => ${srcSet.allSource.srcDirs.map { it.name }}")
         println("Kotlin-${name.capitalize()} => ${ktSrcSet.kotlin.srcDirs.map { it.name }}")
     }
-    println("<=========================>")
+    println("=========================")
+}
+
+/**
+ * Add jar manifests.
+ */
+tasks.withType<Jar> {
+    manifest {
+        attributes(mapOf("Built-By" to appAuthor,
+                "Built-Date" to buildDateTime,
+                Attributes.Name.IMPLEMENTATION_VERSION.toString() to appVersion,
+                Attributes.Name.IMPLEMENTATION_TITLE.toString() to application.applicationName,
+                Attributes.Name.MAIN_CLASS.toString() to application.mainClassName))
+    }
 }
 
 /**
@@ -192,15 +201,16 @@ tasks.withType<ProcessResources> {
  * Make executable
  */
 task<FatCapsule>("makeExecutable") {
-    // val appConfig = project.convention.getPlugin(ApplicationPluginConvention::class)
     val minJavaVer = javaVersion.toString()
-    archiveName = application().applicationName
-    reallyExecutable = ReallyExecutableSpec().trampolining()
+    val appName = application.applicationName
+    val appMainClass = application.mainClassName
+    archiveName = appName
+    reallyExecutable = ReallyExecutableSpec().regular()
     capsuleManifest = CapsuleManifest().apply {
         premainClass = "Capsule"
         mainClass = "Capsule"
-        applicationName = application().applicationName
-        applicationClass = application().mainClassName
+        applicationName = appName
+        applicationClass = appMainClass
         applicationVersion = version
         jvmArgs = listOf("-client")
         args = listOf("$*")
@@ -208,18 +218,24 @@ task<FatCapsule>("makeExecutable") {
     }
     description = "Create $archiveName executable."
     dependsOn("clean")
+
+    doLast {
+        println("Executable File: ${archivePath.absolutePath.bold}".done)
+    }
 }
+
 
 /**
  * Generate Gradle Script Kotlin wrapper.
  */
 task<Wrapper>("wrapper") {
-    description = "Generate Gradle Script Kotlin wrapper v0.8"
-    //gradleVersion = "3.5"
+    description = "Generate Gradle Script Kotlin wrapper v$wrapperVersion"
     distributionType = ALL
-    distributionUrl = getGskURL("3.5-20170331195952+0000")
+    distributionUrl = getGskURL(wrapperVersion)
+    doFirst {
+        println(description)
+    }
 }
-
 
 /**
  * Task rules
@@ -258,18 +274,7 @@ task("async") {
             print("Hello, ")
             delay(2000)
         }
-        println("By ${author ?: "Suresh"}")
-    }
-}
-
-fun fib() = buildSequence {
-    var a = 0
-    var b = 1
-    while (true) {
-        yield(b)
-        val next = a + b
-        a = b
-        b = next
+        println("By ${appAuthor ?: "Suresh"}")
     }
 }
 
@@ -278,29 +283,4 @@ fun fib() = buildSequence {
  */
 defaultTasks("clean", "tasks", "--all")
 
-fun printHeader(embdKtVersion: String = embeddedKotlinVersion) {
-    val header = """
-                 +-------------------------------+
-                 |  Kotlin Starter Build Script  |
-                 +-------------------------------+
-                 """.trimIndent()
-    println(header)
-    println("\nEmbedded kotlin version: $embdKtVersion")
-    println("Configured project properties are,")
-    extra.properties.entries.sortedBy { it.key }.forEach {
-        println("%-18s = %-20s".format(it.key, it.value))
-    }
-    println()
-}
 
-/**
- * Helper/extension functions.
- */
-fun getGskURL(version: String, type: DistributionType = ALL) = "https://repo.gradle.org/gradle/dist-snapshots/gradle-script-kotlin-$version-${type.name.toLowerCase()}.zip"
-
-fun DependencyHandler.kotlinxModule(module: String, version: String = kotlinxVersion) = "org.jetbrains.kotlinx:${if (module.startsWith("kotlin", true)) "" else "kotlinx-"}$module:$version"
-
-/**
- * Extension function to create new task.
- */
-inline fun <reified T : Task> task(noinline config: T.() -> Unit) = tasks.creating(T::class, config)

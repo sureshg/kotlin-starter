@@ -14,10 +14,10 @@
             "allOpen": "org.jetbrains.kotlin.allopen.gradle.AllOpenExtension",
             "noArg": "org.jetbrains.kotlin.noarg.gradle.NoArgExtension",
             "capsule": "us.kirchmeier.capsule.CapsuleGradlePlugin.CapsuleGradleExtension",
+            "springBoot": "org.springframework.boot.gradle.SpringBootPluginExtension",
+            "dependencyManagement": "io.spring.gradle.dependencymanagement.internal.dsl.StandardDependencyManagementExtension",
             "distributions": "org.gradle.api.distribution.DistributionContainer",
-            "idea": "org.gradle.plugins.ide.idea.model.IdeaModel",
-            "springBoot": "org.springframework.boot.gradle.dsl.SpringBootExtension",
-            "dependencyManagement": "io.spring.gradle.dependencymanagement.internal.dsl.StandardDependencyManagementExtension"
+            "idea": "org.gradle.plugins.ide.idea.model.IdeaModel"
         }
     }
 }

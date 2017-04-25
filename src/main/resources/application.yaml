@@ -1,7 +1,7 @@
 info:
   build:
     name: ${name}
-    author: ${author}
+    author: ${appAuthor}
     description: ${description}
     version: ${version}
     java-version: ${javaVersion}
