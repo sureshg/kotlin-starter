@@ -13,6 +13,9 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
 import org.gradle.jvm.tasks.Jar
 import org.gradle.script.lang.kotlin.*
+import org.jetbrains.dokka.gradle.DokkaPlugin
+import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.LinkMapping
 import java.util.jar.Attributes
 
 buildscript {
@@ -28,7 +31,7 @@ buildscript {
     kotlinVersion = "1.1.2"
     kotlinxVersion = "0.14.1"
     wrapperVersion = "4.0-20170421144052+0000"
-    springBootVersion = "2.0.0.BUILD-SNAPSHOT"
+    springBootVersion = "1.5.3.RELEASE"
     kotlinxRepo = "https://dl.bintray.com/kotlin/kotlinx"
     kotlinEAPRepo = "https://dl.bintray.com/kotlin/kotlin-eap-1.1"
 
@@ -40,6 +43,7 @@ buildscript {
 
     dependencies {
         classpath("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
+        classpath("org.jetbrains.dokka:dokka-gradle-plugin:0.9.13")
     }
 }
 
@@ -58,16 +62,17 @@ plugins {
     application
     idea
     `help-tasks`
-    val pluginVersion = "1.1.1"
-    id("org.jetbrains.kotlin.jvm") version pluginVersion
-    id("org.jetbrains.kotlin.kapt") version pluginVersion
-    id("org.jetbrains.kotlin.plugin.allopen") version pluginVersion
-    id("org.jetbrains.kotlin.plugin.noarg") version pluginVersion
-    id("org.jetbrains.kotlin.plugin.spring") version pluginVersion
-    id("org.jetbrains.kotlin.plugin.jpa") version pluginVersion
-    id("org.jetbrains.kotlin.android") version pluginVersion apply false
-    id("org.jetbrains.kotlin.android.extensions") version pluginVersion apply false
 
+    val (ktPlugin, dokkaPlugin) = "1.1.2" to "0.9.13"
+    id("org.jetbrains.kotlin.jvm") version ktPlugin
+    id("org.jetbrains.kotlin.kapt") version ktPlugin
+    id("org.jetbrains.kotlin.plugin.allopen") version ktPlugin
+    id("org.jetbrains.kotlin.plugin.noarg") version ktPlugin
+    id("org.jetbrains.kotlin.plugin.spring") version ktPlugin
+    id("org.jetbrains.kotlin.plugin.jpa") version ktPlugin
+    id("org.jetbrains.kotlin.android") version ktPlugin apply false
+    id("org.jetbrains.kotlin.android.extensions") version ktPlugin apply false
+    //id("org.jetbrains.dokka") version dokkaPlugin
     id("us.kirchmeier.capsule") version "1.0.2"
     id("com.dorongold.task-tree") version "1.3"
     id("org.springframework.boot") version "1.5.3.RELEASE"
@@ -82,6 +87,8 @@ apply {
     }.forEach {
         from(it.name)
     }
+
+    plugin<DokkaPlugin>()
     plugin<DependencyManagementPlugin>()
 }
 
@@ -112,6 +119,28 @@ application {
  */
 kotlin {
     experimental.coroutines = ENABLE
+}
+
+/**
+ * Enable java incremental compilation.
+ */
+tasks.withType<DokkaTask> {
+    val src = "src/main/kotlin"
+    moduleName = rootProject.name
+    outputFormat = DokkaFormat.JAVADOC.name
+    outputDirectory = "$projectDir/docs"
+    includes = listOf("README.md")
+    val mapping = LinkMapping().apply {
+        dir = src
+        url = "https://github.com/sureshg/kotlin-starter/blob/master/$src"
+        suffix = "#L"
+    }
+    linkMappings = arrayListOf(mapping)
+    description = "Generate docs in $outputFormat format."
+
+    doLast {
+        println("Generated $outputFormat format docs to $outputDirectory".sux)
+    }
 }
 
 /**

@@ -5,13 +5,15 @@ package io.sureshg
  *
  * @author Suresh (@sur3shg)
  */
-
 fun main(args: Array<String>) {
     //explosivePlaceHolder()
     semValidation("HelloKotlin")
     println(join("|", listOf("Kotlin", "is", "awesome!")))
 }
 
+/**
+ * Kotlin explosive place holder.
+ */
 fun explosivePlaceHolder(): String = TODO("Will do later!")
 
 fun semValidation(msg: String) {

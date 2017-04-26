@@ -2,6 +2,7 @@ import org.gradle.api.tasks.Delete
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.gradle.api.artifacts.dsl.DependencyHandler
 
 buildscript {
     var kotlinVersion: String by extra
@@ -18,7 +19,7 @@ buildscript {
 }
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.1.1"
+    id("org.jetbrains.kotlin.jvm") version "1.1.2"
 }
 
 val kotlinVersion: String by extra
@@ -49,15 +50,20 @@ repositories {
 dependencies {
     compile(gradleScriptKotlinApi())
     compile(kotlinModule("stdlib-jre8", kotlinVersion))
-    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
+    compile(kotlinxModule("coroutines-core", kotlinxVersion))
 }
 
 /**
  * Retrieves the [kotlin][KotlinProjectExtension] project extension.
  */
-val Project.kotlin: KotlinProjectExtension get() = extensions.getByName("kotlin") as KotlinProjectExtension
+val Project.kotlin get() = extensions.getByName("kotlin") as KotlinProjectExtension
 
 /**
  * Configures the [kotlin][KotlinProjectExtension] project extension.
  */
 fun Project.kotlin(configure: KotlinProjectExtension.() -> Unit): Unit = extensions.configure("kotlin", configure)
+
+/**
+ * Kotlinx module extension.
+ */
+fun DependencyHandler.kotlinxModule(module: String, version: String = kotlinxVersion) = "org.jetbrains.kotlinx:${if (module.startsWith("kotlin", true)) "" else "kotlinx-"}$module:$version"
