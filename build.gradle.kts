@@ -120,34 +120,6 @@ kotlin {
 }
 
 /**
- * Enable dokka task.
- */
-tasks.withType<DokkaTask> {
-    val src = "src/main/kotlin"
-    val out = "$projectDir/docs"
-    doFirst {
-        println("Cleaning ${out.bold} directory...".cyan)
-        project.delete(out)
-    }
-
-    moduleName = ""
-    outputFormat = DokkaFormat.html.name
-    outputDirectory = out
-    includes = listOf("README.md")
-    val mapping = LinkMapping().apply {
-        dir = src
-        url = "https://github.com/sureshg/kotlin-starter/blob/master/$src"
-        suffix = "#L"
-    }
-    linkMappings = arrayListOf(mapping)
-    description = "Generate docs in $outputFormat format."
-
-    doLast {
-        println("Generated $outputFormat format docs to ${outputDirectory.bold}".done)
-    }
-}
-
-/**
  * Enable java incremental compilation.
  */
 tasks.withType<JavaCompile> {
@@ -258,6 +230,36 @@ task<FatCapsule>("makeExecutable") {
     }
 }
 
+
+/**
+ * Generate doc using dokka.
+ */
+tasks.withType<DokkaTask> {
+    val src = "src/main/kotlin"
+    val out = "$projectDir/docs"
+    val format = DokkaFormat.KotlinWeb
+    doFirst {
+        println("Cleaning ${out.bold} directory...".cyan)
+        project.delete(out)
+    }
+
+    moduleName = ""
+    outputFormat = format.type
+    outputDirectory = out
+    jdkVersion = javaVersion.majorVersion.toInt()
+    includes = listOf("README.md")
+    val mapping = LinkMapping().apply {
+        dir = src
+        url = "https://github.com/sureshg/kotlin-starter/blob/master/$src"
+        suffix = "#L"
+    }
+    linkMappings = arrayListOf(mapping)
+    description = "Generate docs in ${format.desc} format."
+
+    doLast {
+        println("Generated ${format.desc} format docs to ${outputDirectory.bold}".done)
+    }
+}
 
 /**
  * Generate Gradle Script Kotlin wrapper.

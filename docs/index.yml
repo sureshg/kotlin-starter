@@ -1,0 +1,74 @@
+- title: 
+  url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/index
+  content:
+    - title: alltypes
+      url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/alltypes/index
+      content:
+        - title: UiOp
+          url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/index
+          content:
+            - title: Custom
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/-custom/index
+              content:
+                - title: Custom
+                  url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/-custom/-init-
+                - title: type
+                  url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/-custom/type
+            - title: hide
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/hide
+            - title: name
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/name
+            - title: show
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/show
+        - title: User
+          url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-user/index
+          content:
+            - title: User
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-user/-init-
+            - title: name
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-user/name
+    - title: io.sureshg
+      url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/index
+      content:
+        - title: JavaMain
+          url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-java-main/index
+          content:
+            - title: JavaMain
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-java-main/-init-
+            - title: main
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-java-main/main
+        - title: UiOp
+          url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/index
+          content:
+            - title: Custom
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/-custom/index
+              content:
+                - title: Custom
+                  url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/-custom/-init-
+                - title: type
+                  url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/-custom/type
+            - title: hide
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/hide
+            - title: name
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/name
+            - title: show
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-ui-op/show
+        - title: User
+          url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-user/index
+          content:
+            - title: User
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-user/-init-
+            - title: name
+              url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/-user/name
+        - title: anyOrNothing
+          url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/any-or-nothing
+        - title: explosivePlaceHolder
+          url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/explosive-place-holder
+        - title: join
+          url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/join
+        - title: main
+          url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/main
+        - title: main
+          url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/main
+        - title: semValidation
+          url: /Users/sgopal1/code/kotlin/kotlin-starter/docs/io.sureshg/sem-validation
