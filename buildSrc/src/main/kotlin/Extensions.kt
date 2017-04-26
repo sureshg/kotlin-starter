@@ -60,9 +60,9 @@ fun Project.printHeader(version: Any?, embdKtVersion: String = embeddedKotlinVer
  * Dokka output format.
  */
 enum class DokkaFormat(val desc: String) {
-    HTML("HTML Doc"),
-    MarkDown("Markdown(md) doc"),
-    GFM("GitHub-Flavored Markdown"),
-    JEKYLL("Markdown adapted for Jekyll sites"),
-    JAVADOC("Javadoc format")
+    html("HTML Doc"),
+    markdown("Markdown(md) doc"),
+    gfm("GitHub-Flavored Markdown"),
+    jekyll("Markdown adapted for Jekyll sites"),
+    javadoc("Javadoc format")
 }

@@ -13,9 +13,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
 import org.gradle.jvm.tasks.Jar
 import org.gradle.script.lang.kotlin.*
-import org.jetbrains.dokka.gradle.DokkaPlugin
-import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.dokka.gradle.LinkMapping
+import org.jetbrains.dokka.gradle.*
 import java.util.jar.Attributes
 
 buildscript {
@@ -122,13 +120,19 @@ kotlin {
 }
 
 /**
- * Enable java incremental compilation.
+ * Enable dokka task.
  */
 tasks.withType<DokkaTask> {
     val src = "src/main/kotlin"
-    moduleName = rootProject.name
-    outputFormat = DokkaFormat.JAVADOC.name
-    outputDirectory = "$projectDir/docs"
+    val out = "$projectDir/docs"
+    doFirst {
+        println("Cleaning ${out.bold} directory...".cyan)
+        project.delete(out)
+    }
+
+    moduleName = ""
+    outputFormat = DokkaFormat.html.name
+    outputDirectory = out
     includes = listOf("README.md")
     val mapping = LinkMapping().apply {
         dir = src
@@ -139,7 +143,7 @@ tasks.withType<DokkaTask> {
     description = "Generate docs in $outputFormat format."
 
     doLast {
-        println("Generated $outputFormat format docs to $outputDirectory".sux)
+        println("Generated $outputFormat format docs to ${outputDirectory.bold}".done)
     }
 }
 
