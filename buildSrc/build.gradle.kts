@@ -8,7 +8,7 @@ buildscript {
     var kotlinxVersion: String by extra
     var kotlinEAPRepo: String by extra
 
-    kotlinVersion = "1.1.2-eap-77"
+    kotlinVersion = "1.1.2"
     kotlinxVersion = "0.14.1"
     kotlinEAPRepo = "https://dl.bintray.com/kotlin/kotlin-eap-1.1"
 

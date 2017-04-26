@@ -25,7 +25,7 @@ buildscript {
     var springBootVersion: String by extra
 
     javaVersion = JavaVersion.VERSION_1_8
-    kotlinVersion = "1.1.2-eap-77"
+    kotlinVersion = "1.1.2"
     kotlinxVersion = "0.14.1"
     wrapperVersion = "4.0-20170421144052+0000"
     springBootVersion = "2.0.0.BUILD-SNAPSHOT"
@@ -220,6 +220,7 @@ task<FatCapsule>("makeExecutable") {
     dependsOn("clean")
 
     doLast {
+        archivePath.setExecutable(true)
         println("Executable File: ${archivePath.absolutePath.bold}".done)
     }
 }
