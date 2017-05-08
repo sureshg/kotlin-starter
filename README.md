@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="docs/kotlin-log.png"><br><br>
+  <img src="docs/kotlin-logo.png"><br><br>
 </div>
 
 -----------------
