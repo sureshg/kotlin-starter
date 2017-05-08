@@ -234,7 +234,6 @@ task<FatCapsule>("makeExecutable") {
 }
 
 
-
 /**
  * Generate doc using dokka.
  */
@@ -245,7 +244,7 @@ tasks.withType<DokkaTask> {
     doFirst {
         println("Cleaning ${out.bold} directory...".cyan)
         project.delete(fileTree(out) {
-            exclude("kotlin-logo.png")
+            exclude("kotlin-*.png")
         })
     }
 

@@ -1,15 +1,12 @@
 <div align="center">
-  <img src="docs/kotlin-logo.png" alt="Kotlin" height="25%" width="25%"><br><br>
+
+# <img src="docs/kotlin-icon.png" alt="Kotlin" width=25 height=25> Kotlin Starter 
+
+ [![version][release-svg]][release-url] [![changelog][cl-svg]][cl-url] [![build][travis-svg]][travis-url] [![api-doc][apidoc-svg]][apidoc-url] [![gitter][gitter-svg]][gitter-url] [![license][license-svg]][license-url] 
+
+ A starter template for my [kotlin][kotlin] projects using [Gradle Script Kotlin][gsk]!
+ 
 </div>
-
------------------
-
-# :rocket: Kotlin Starter 
-<p align="center">
-
- [![version][release-svg]][release-url] [![changelog][cl-svg]][cl-url] [![build][travis-svg]][travis-url] [![coverall][coverall-svg]][coverall-url] [![api-doc][apidoc-svg]][apidoc-url] [![downloads][total-dl-svg]][total-dl-url] [![license][license-svg]][license-url] 
-</p>
-    A starter template for my [kotlin][kotlin] projects using [Gradle Script Kotlin][gsk]!
 
 ### Download
 
@@ -50,6 +47,8 @@
      $ cd kotlin-starter
      $ ./gradlew githubRelease -q
     ```
+    
+    The latest release is [![version][release-svg]][release-url]
     
 ### Usage
 
@@ -103,7 +102,9 @@
  - Compile whole script against classpath contributed by previous steps.
 
 -----------------
-<sup>**</sup>Require [Java 8 or later][java-download]
+<sup><b>**</b></sup>Require [Java 8 or later][java-download]
+
+<!-- Badges -->
 
 [apidoc-url]: https://sureshg.github.io/kotlin-starter/
 [apidoc-svg]: https://img.shields.io/badge/apidoc-latest-ff69b4.svg?style=flat-square
@@ -126,6 +127,9 @@
 
 [total-dl-url]: https://github.com/sureshg/kotlin-starter/releases
 [total-dl-svg]: https://img.shields.io/github/downloads/sureshg/kotlin-starter/total.svg?style=flat-square
+
+[gitter-url]: https://gitter.im/sureshg/kotlin-starter
+[gitter-svg]: https://img.shields.io/gitter/room/sureshg/kotlin-starter.svg
 
 [gsk]: https://github.com/gradle/gradle-script-kotlin
 [gsk-aot-doc]: https://github.com/gradle/gradle-script-kotlin/releases/tag/v0.8.0
