@@ -9,7 +9,7 @@ buildscript {
     var kotlinxVersion: String by extra
     var kotlinEAPRepo: String by extra
 
-    kotlinVersion = "1.1.2"
+    kotlinVersion = "1.1.2-2"
     kotlinxVersion = "0.14.1"
     kotlinEAPRepo = "https://dl.bintray.com/kotlin/kotlin-eap-1.1"
 
@@ -19,12 +19,21 @@ buildscript {
 }
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.1.2"
+    id("org.jetbrains.kotlin.jvm") version "1.1.2-2"
 }
 
 val kotlinVersion: String by extra
 val kotlinxVersion: String by extra
 val kotlinEAPRepo: String by extra
+
+kotlin {
+    experimental.coroutines = Coroutines.ENABLE
+}
+
+repositories {
+    gradleScriptKotlin()
+    maven { setUrl(kotlinEAPRepo) }
+}
 
 /**
  * Cleaning buildSrc before compilation.
@@ -36,17 +45,8 @@ afterEvaluate {
 }
 
 /**
- * Enable coroutines.
+ * BuildSrc dependencies.
  */
-kotlin {
-    experimental.coroutines = Coroutines.ENABLE
-}
-
-repositories {
-    gradleScriptKotlin()
-    maven { setUrl(kotlinEAPRepo) }
-}
-
 dependencies {
     compile(gradleScriptKotlinApi())
     compile(kotlinModule("stdlib-jre8", kotlinVersion))
@@ -54,13 +54,10 @@ dependencies {
 }
 
 /**
- * Retrieves the [kotlin][KotlinProjectExtension] project extension.
+ * Configures the [kotlin][KotlinProjectExtension] project extension.
  */
 val Project.kotlin get() = extensions.getByName("kotlin") as KotlinProjectExtension
 
-/**
- * Configures the [kotlin][KotlinProjectExtension] project extension.
- */
 fun Project.kotlin(configure: KotlinProjectExtension.() -> Unit): Unit = extensions.configure("kotlin", configure)
 
 /**

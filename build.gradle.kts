@@ -1,3 +1,4 @@
+import co.riiid.gradle.ReleaseTask
 import org.gradle.api.tasks.wrapper.Wrapper
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
 import org.gradle.language.jvm.tasks.ProcessResources
@@ -26,9 +27,9 @@ buildscript {
     var springBootVersion: String by extra
 
     javaVersion = JavaVersion.VERSION_1_8
-    kotlinVersion = "1.1.2"
+    kotlinVersion = "1.1.2-2"
     kotlinxVersion = "0.14.1"
-    wrapperVersion = "4.0-20170421144052+0000"
+    wrapperVersion = "4.0-20170427155501+0000"
     springBootVersion = "1.5.3.RELEASE"
     kotlinxRepo = "https://dl.bintray.com/kotlin/kotlinx"
     kotlinEAPRepo = "https://dl.bintray.com/kotlin/kotlin-eap-1.1"
@@ -57,11 +58,13 @@ val wrapperVersion: String by extra
 printHeader(appVersion)
 
 plugins {
+    val ktPlugin = "1.1.2-2"
+    val dokkaPlugin = "0.9.13"
+    val bootPlugin = "1.5.3.RELEASE"
+
     application
     idea
     `help-tasks`
-
-    val (ktPlugin, dokkaPlugin) = "1.1.2" to "0.9.13"
     id("org.jetbrains.kotlin.jvm") version ktPlugin
     id("org.jetbrains.kotlin.kapt") version ktPlugin
     id("org.jetbrains.kotlin.plugin.allopen") version ktPlugin
@@ -70,10 +73,11 @@ plugins {
     id("org.jetbrains.kotlin.plugin.jpa") version ktPlugin
     id("org.jetbrains.kotlin.android") version ktPlugin apply false
     id("org.jetbrains.kotlin.android.extensions") version ktPlugin apply false
-    //id("org.jetbrains.dokka") version dokkaPlugin
     id("us.kirchmeier.capsule") version "1.0.2"
     id("com.dorongold.task-tree") version "1.3"
-    id("org.springframework.boot") version "1.5.3.RELEASE"
+    id("co.riiid.gradle") version "0.4.2"
+    id("org.springframework.boot") version bootPlugin
+    //id("org.jetbrains.dokka") version dokkaPlugin
 }
 
 /**
@@ -109,7 +113,7 @@ java {
  */
 application {
     applicationName = rootProject.name
-    mainClassName = "io.sureshg.KotlinMainKt"
+    mainClassName = "$group.MainKt"
 }
 
 /**
@@ -142,15 +146,14 @@ repositories {
     mavenCentral()
 }
 
-
-val retrofitVersion = "2.2.0"
-val coroutinesRetrofit = "0.5.0"
-val moshiVersion = "1.4.0"
-val jnrVersion = "3.0.37"
-val immutableCollVersion = "0.1"
-val ktSocketsVersion = "0.0.4"
-
 dependencies {
+    val retrofitVersion = "2.2.0"
+    val coroutinesRetrofit = "0.5.0"
+    val moshiVersion = "1.4.0"
+    val jnrVersion = "3.0.37"
+    val immutableCollVersion = "0.1"
+    val ktSocketsVersion = "0.0.4"
+
     compile(kotlinModule("stdlib-jre8", kotlinVersion))
     compile(kotlinModule("reflect", kotlinVersion))
     compile(kotlinxModule("coroutines-core", kotlinxVersion))
@@ -231,6 +234,7 @@ task<FatCapsule>("makeExecutable") {
 }
 
 
+
 /**
  * Generate doc using dokka.
  */
@@ -240,7 +244,9 @@ tasks.withType<DokkaTask> {
     val format = DokkaFormat.KotlinWeb
     doFirst {
         println("Cleaning ${out.bold} directory...".cyan)
-        project.delete(out)
+        project.delete(fileTree(out) {
+            exclude("kotlin-logo.png")
+        })
     }
 
     moduleName = ""
@@ -262,6 +268,35 @@ tasks.withType<DokkaTask> {
 }
 
 /**
+ * Github release config and set token.
+ */
+github {
+    baseUrl = "https://api.github.com"
+    owner = "sureshg"
+    repo = application.applicationName
+    tagName = version.toString()
+    targetCommitish = "master"
+    name = "${application.applicationName} v$version"
+    val changelog = "${baseUrl.replace(".api", "", true)}/$owner/$repo/blob/$targetCommitish/CHANGELOG.md"
+    body = "$name release. Check [CHANGELOG.md]($changelog) for details."
+    setAssets(File(buildDir, "libs/${application.applicationName}").path)
+}
+
+tasks.withType<ReleaseTask> {
+    doFirst {
+        github.token = getEnv("GITHUB_TOKEN")
+    }
+
+    doLast {
+        println("Published github release ${github.name}.".done)
+        println("Release URL: ${githubReleaseURL(owner = github.owner, repo = github.repo).bold}")
+    }
+
+    description = "Publish Github release ${github.name}"
+    dependsOn("makeExecutable")
+}
+
+/**
  * Generate Gradle Script Kotlin wrapper.
  */
 task<Wrapper>("wrapper") {
@@ -272,22 +307,6 @@ task<Wrapper>("wrapper") {
         println(description)
     }
 }
-
-/**
- * Task rules
- */
-tasks.addRule("Pattern: extra-<PropName>: Get the project extension property value with <PropName>") {
-    val taskName = this
-    if (taskName.startsWith("extra-")) {
-        val task = task(taskName).doLast {
-            val prop = taskName.removePrefix("extra-")
-            val value = project.extra.properties.getOrDefault(prop, "N/A")
-            println("Extension property, $prop : $value")
-        }
-        task.dependsOn(tasks.getByName("clean"))
-    }
-}
-
 
 /**
  * A tasks using coroutines.
@@ -318,5 +337,6 @@ task("async") {
  * Set default task
  */
 defaultTasks("clean", "tasks", "--all")
+
 
 

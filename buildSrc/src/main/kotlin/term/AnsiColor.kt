@@ -1,3 +1,5 @@
+package term
+
 /**
  * ANSI color/graphics extension functions.
  *
