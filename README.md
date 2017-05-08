@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="docs/kotlin-logo.png"><br><br>
+  <img src="docs/kotlin-logo.png" alt="Kotlin" height="30%" width="30%"><br><br>
 </div>
 
 -----------------
