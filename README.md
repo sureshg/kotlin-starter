@@ -1,18 +1,21 @@
 <div align="center">
-  <img src="docs/kotlin-logo.png" alt="Kotlin" height="30%" width="30%"><br><br>
+  <img src="docs/kotlin-logo.png" alt="Kotlin" height="25%" width="25%"><br><br>
 </div>
 
 -----------------
 
-# :rocket: Kotlin Starter Project [![version][version-svg]][download] [![api-doc][doc-svg]][apidoc-url] [![changelog][cl-svg]][cl-url]
+# :rocket: Kotlin Starter 
+<p align="center">
 
-  A starter template for my [kotlin][kotlin] projects using [Gradle Script Kotlin][gsk]!
+ [![version][release-svg]][release-url] [![changelog][cl-svg]][cl-url] [![build][travis-svg]][travis-url] [![coverall][coverall-svg]][coverall-url] [![api-doc][apidoc-svg]][apidoc-url] [![downloads][total-dl-svg]][total-dl-url] [![license][license-svg]][license-url] 
+</p>
+    A starter template for my [kotlin][kotlin] projects using [Gradle Script Kotlin][gsk]!
 
 ### Download
 
 * Binary
 
-   [Download (v1.0.5)][download]
+   [![Download][release-svg]][download-url]
 
    > After download, make sure to set the execute permission (`chmod +x kotlin-starter`). Windows users can run the `executable jar`.
 
@@ -99,24 +102,40 @@
  - MAGIC (generate Kotlin code based on information contributed by previous steps).
  - Compile whole script against classpath contributed by previous steps.
 
-----------
+-----------------
 <sup>**</sup>Require [Java 8 or later][java-download]
 
-[kotlin]: https://kotlinlang.org/
-[gsk]: https://github.com/gradle/gradle-script-kotlin
-[version-svg]: https://img.shields.io/badge/kotlinstarter-1.0.5-green.svg?style=flat-square
-[doc-svg]: https://img.shields.io/badge/apidoc-1.0.5-ff69b4.svg?style=flat-square
-[cl-svg]: https://img.shields.io/badge/changelog-1.0.5-blue.svg?style=flat-square
-[cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md
 [apidoc-url]: https://sureshg.github.io/kotlin-starter/
-[download]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.5/kotlin-starter
-[github-token]: https://github.com/settings/tokens
-[java-download]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
+[apidoc-svg]: https://img.shields.io/badge/apidoc-latest-ff69b4.svg?style=flat-square
+
+[cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md#105
+[cl-svg]: https://img.shields.io/badge/changelog-1.0.5-blue.svg?style=flat-square
+
+[release-url]: https://github.com/sureshg/kotlin-starter/releases/latest
+[download-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.5/kotlin-starter
+[release-svg]: https://img.shields.io/github/release/sureshg/kotlin-starter.svg?style=flat-square
+
+[license-url]: https://github.com/sureshg/kotlin-starter/blob/master/LICENSE
+[license-svg]: https://img.shields.io/github/license/sureshg/kotlin-starter.svg?style=flat-square
+
+[travis-url]: https://travis-ci.org/sureshg/kotlin-starter/builds
+[travis-svg]: https://img.shields.io/travis/sureshg/kotlin-starter.svg?style=flat-square
+
+[coverall-url]: https://coveralls.io/github/sureshg/kotlin-starter?branch=master
+[coverall-svg]: https://img.shields.io/coveralls/sureshg/kotlin-starter.svg?style=flat-square
+
+[total-dl-url]: https://github.com/sureshg/kotlin-starter/releases
+[total-dl-svg]: https://img.shields.io/github/downloads/sureshg/kotlin-starter/total.svg?style=flat-square
+
+[gsk]: https://github.com/gradle/gradle-script-kotlin
+[gsk-aot-doc]: https://github.com/gradle/gradle-script-kotlin/releases/tag/v0.8.0
+
+[kotlin]: https://kotlinlang.org/
 [kotlin-slack-thread]: https://kotlinlang.slack.com/archives/gradle/p1488489798002208
 [maven-google-mirror]: https://maven-central.storage.googleapis.com
-[gsk-aot-doc]: https://github.com/gradle/gradle-script-kotlin/releases/tag/v0.8.0
+[java-download]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
+
+[github-token]: https://github.com/settings/tokens
 [github-pages]: https://pages.github.com/
 [github-pages-pub]: https://help.github.com/articles/configuring-a-publishing-source-for-github-pages/
-
-
 
