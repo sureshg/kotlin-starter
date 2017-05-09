@@ -108,7 +108,7 @@
 [apidoc-url]: https://sureshg.github.io/kotlin-starter/
 [apidoc-svg]: https://img.shields.io/badge/apidoc-latest-ff69b4.svg?style=flat-square
 
-[cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md#105
+[cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md#106
 [cl-svg]: https://img.shields.io/badge/changelog-1.0.6-blue.svg?style=flat-square
 
 [release-url]: https://github.com/sureshg/kotlin-starter/releases/latest
