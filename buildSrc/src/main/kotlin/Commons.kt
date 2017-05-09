@@ -1,6 +1,3 @@
-package text
-
-import sun.misc.HexDumpEncoder
 import java.io.File
 import java.io.IOException
 import java.net.JarURLConnection
@@ -11,6 +8,7 @@ import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
 import java.security.MessageDigest
 import java.util.*
+import java.util.jar.Attributes
 import java.util.jar.Manifest
 import javax.crypto.Cipher
 import javax.crypto.Mac
@@ -18,6 +16,7 @@ import javax.crypto.spec.SecretKeySpec
 import kotlin.reflect.KClass
 import kotlin.text.Charsets.US_ASCII
 import kotlin.text.Charsets.UTF_8
+import sun.misc.HexDumpEncoder
 
 /**
  * Common extension functions.
@@ -37,7 +36,7 @@ val FILE_SEP = File.separator
 inline val Any?.p get() = println(this)
 
 /**
- * Random number generator.
+ * Pseudo Random number generator.
  */
 val RAND = Random(System.nanoTime())
 
@@ -172,6 +171,38 @@ inline val ByteArray.base64: ByteArray get() = Base64.getEncoder().encode(this)
 inline val ByteArray.base64Decode: ByteArray get() = Base64.getDecoder().decode(this)
 
 /**
+ * Returns human readable binary prefix for multiples of bytes.
+ *
+ * @param si [true] if it's SI unit, else it will be treated as Binary Unit.
+ */
+fun Long.toBinaryPrefixString(si: Boolean = false): String {
+    // SI and Binary Units
+    val unit = if (si) 1_000 else 1_024
+    return when {
+        this < unit -> "$this B"
+        else -> {
+            val (prefix, suffix) = when (si) {
+                true -> "kMGTPEZY" to "B"
+                false -> "KMGTPEZY" to "iB"
+            }
+            // Get only the integral part of the decimal
+            val exp = (Math.log(this.toDouble()) / Math.log(unit.toDouble())).toInt()
+            // Binary Prefix mnemonic that is prepended to the units.
+            val binPrefix = "${prefix[exp - 1]}$suffix"
+            // Count => (unit^0.x * unit^exp)/unit^exp
+            String.format("%.2f %s", this / Math.pow(unit.toDouble(), exp.toDouble()), binPrefix)
+        }
+    }
+}
+
+/**
+ * Returns human readable binary prefix for multiples of bytes.
+ *
+ * @param si [true] if it's SI unit, else it will be treated as Binary Unit.
+ */
+fun Int.toBinaryPrefixString(si: Boolean = false) = toLong().toBinaryPrefixString(si)
+
+/**
  * Get the root cause by walks through the exception chain to the last element,
  * "root" of the tree, using [Throwable.getCause], and returns that exception.
  */
@@ -292,3 +323,24 @@ inline val <T : Any> KClass<T>.jarManifest: Manifest? get() {
     val conn = res.openConnection()
     return if (conn is JarURLConnection) conn.manifest else null
 }
+
+/**
+ * Common build info attributes
+ */
+enum class BuildInfo(val attr: String) {
+    Author("Built-By"),
+    Date("Built-Date"),
+    JDK("Build-Jdk"),
+    Target("Build-Target"),
+    OS("Build-OS"),
+    KotlinVersion("Kotlin-Version"),
+    CreatedBy("Created-By"),
+    Title(Attributes.Name.IMPLEMENTATION_TITLE.toString()),
+    Vendor(Attributes.Name.IMPLEMENTATION_VENDOR.toString()),
+    AppVersion(Attributes.Name.IMPLEMENTATION_VERSION.toString())
+}
+
+/**
+ * Returns the [BuildInfo] attribute value from jar manifest [Attributes]
+ */
+fun Attributes?.getVal(name: BuildInfo): String = this?.getValue(name.attr) ?: "N/A"

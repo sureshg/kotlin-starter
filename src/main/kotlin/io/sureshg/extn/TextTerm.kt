@@ -3,12 +3,8 @@ package term
 import kotlin.coroutines.experimental.buildSequence
 
 /**
- * Text handling focused on formatting monospaced plaintext,
- * like in a terminal.
- *
- * @see https://github.com/xenomachina/xenocom.
+ * These extension are copied from https://github.com/xenomachina/xenocom.
  */
-
 const val NBSP_CODEPOINT = 0xa0
 
 internal const val SPACE_WIDTH = 1

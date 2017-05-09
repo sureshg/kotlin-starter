@@ -1,4 +1,4 @@
-package term
+package io.sureshg.extn
 
 /**
  * ANSI color/graphics extension functions.
@@ -254,3 +254,34 @@ inline val String.highvolt get() = "\u26A1 $this".yellow
  * Completed (Beer Glass) string.
  */
 inline val String.done get() = "\uD83C\uDF7A  $this".green
+
+fun main(args: Array<String>) {
+    "Kotlin".bold.underline.blue.p
+    "Java".yellow.bu.p
+    "Dart".cyan.bold.p
+    "Golang".magenta.p
+    "Scala".red.underline.bold.p
+    "Python".green.bold.p
+    "Clojure".magenta.bold.p
+    "Ruby".err.bold.p
+
+    for (i in 1..50) {
+        "Hello $i".fgGrayScale(i).p
+    }
+
+    for (i in 1..50) {
+        "Hello $i".bgGrayScale(i).p
+    }
+
+    for (i in 1..300) {
+        "Hello FG $i".fg256(i).p
+    }
+
+    for (i in 1..300) {
+        "Hello BG $i".bg256(i).p
+    }
+
+    AnsiColor.values().forEach {
+        "AnsiColor ${it.name} (${it.codes.joinToString(",")})".color(it).p
+    }
+}

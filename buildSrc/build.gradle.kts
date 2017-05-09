@@ -9,9 +9,9 @@ buildscript {
     var kotlinxVersion: String by extra
     var kotlinEAPRepo: String by extra
 
-    kotlinVersion = "1.1.2-2"
-    kotlinxVersion = "0.14.1"
-    kotlinEAPRepo = "https://dl.bintray.com/kotlin/kotlin-eap-1.1"
+    kotlinVersion = System.getProperty("kotlin.version")
+    kotlinxVersion = System.getProperty("kotlinx.version")
+    kotlinEAPRepo = System.getProperty("kotlin.eap.repo")
 
     repositories {
         gradleScriptKotlin()
@@ -19,7 +19,8 @@ buildscript {
 }
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.1.2-2"
+    val ktPlugin = System.getProperty("kotlin.version")
+    id("org.jetbrains.kotlin.jvm") version ktPlugin
 }
 
 val kotlinVersion: String by extra
@@ -60,7 +61,4 @@ val Project.kotlin get() = extensions.getByName("kotlin") as KotlinProjectExtens
 
 fun Project.kotlin(configure: KotlinProjectExtension.() -> Unit): Unit = extensions.configure("kotlin", configure)
 
-/**
- * Kotlinx module extension.
- */
 fun DependencyHandler.kotlinxModule(module: String, version: String = kotlinxVersion) = "org.jetbrains.kotlinx:${if (module.startsWith("kotlin", true)) "" else "kotlinx-"}$module:$version"

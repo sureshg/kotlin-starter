@@ -1,3 +1,5 @@
+import term.*
+import BuildInfo.*
 import co.riiid.gradle.ReleaseTask
 import org.gradle.api.tasks.wrapper.Wrapper
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
@@ -17,6 +19,7 @@ import org.gradle.script.lang.kotlin.*
 import org.jetbrains.dokka.gradle.*
 import java.util.jar.Attributes
 
+
 buildscript {
     var javaVersion: JavaVersion by extra
     var kotlinVersion: String by extra
@@ -24,25 +27,26 @@ buildscript {
     var wrapperVersion: String by extra
     var kotlinEAPRepo: String by extra
     var kotlinxRepo: String by extra
+    var dokkaVersion: String by extra
     var springBootVersion: String by extra
 
     javaVersion = JavaVersion.VERSION_1_8
-    kotlinVersion = "1.1.2-2"
-    kotlinxVersion = "0.14.1"
-    wrapperVersion = "4.0-20170427155501+0000"
-    springBootVersion = "1.5.3.RELEASE"
-    kotlinxRepo = "https://dl.bintray.com/kotlin/kotlinx"
-    kotlinEAPRepo = "https://dl.bintray.com/kotlin/kotlin-eap-1.1"
+    kotlinVersion = "kotlin.version".sysProp
+    kotlinxVersion = "kotlinx.version".sysProp
+    wrapperVersion = "wrapper.version".sysProp
+    kotlinEAPRepo = "kotlin.eap.repo".sysProp
+    kotlinxRepo = "kotlinx.repo".sysProp
+    dokkaVersion = "dokka.version".sysProp
+    springBootVersion = "springboot.version".sysProp
 
     repositories {
         gradleScriptKotlin()
         maven { setUrl(kotlinxRepo) }
-        mavenCentral()
     }
 
     dependencies {
         classpath("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
-        classpath("org.jetbrains.dokka:dokka-gradle-plugin:0.9.13")
+        classpath("org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion")
     }
 }
 
@@ -58,9 +62,9 @@ val wrapperVersion: String by extra
 printHeader(appVersion)
 
 plugins {
-    val ktPlugin = "1.1.2-2"
-    val dokkaPlugin = "0.9.13"
-    val bootPlugin = "1.5.3.RELEASE"
+    val ktPlugin = "kotlin.version".sysProp
+    val dokkaPlugin = "dokka.version".sysProp
+    val bootPlugin = "springboot.version".sysProp
 
     application
     idea
@@ -77,7 +81,7 @@ plugins {
     id("com.dorongold.task-tree") version "1.3"
     id("co.riiid.gradle") version "0.4.2"
     id("org.springframework.boot") version bootPlugin
-    //id("org.jetbrains.dokka") version dokkaPlugin
+    // id("org.jetbrains.dokka") version dokkaPlugin
 }
 
 /**
@@ -113,7 +117,7 @@ java {
  */
 application {
     applicationName = rootProject.name
-    mainClassName = "$group.MainKt"
+    mainClassName = "${project.group}.MainKt"
 }
 
 /**
@@ -187,10 +191,17 @@ compileJava.doFirst {
  */
 tasks.withType<Jar> {
     manifest {
-        attributes(mapOf("Built-By" to appAuthor,
-                "Built-Date" to buildDateTime,
+        attributes(mapOf(
+                Author.attr to appAuthor,
+                Date.attr to buildDateTime,
+                JDK.attr to "java.version".sysProp,
+                Target.attr to javaVersion,
+                OS.attr to "${"os.name".sysProp} ${"os.version".sysProp}",
+                KotlinVersion.attr to kotlinVersion,
+                CreatedBy.attr to "Gradle ${gradle.gradleVersion}",
                 Attributes.Name.IMPLEMENTATION_VERSION.toString() to appVersion,
                 Attributes.Name.IMPLEMENTATION_TITLE.toString() to application.applicationName,
+                Attributes.Name.IMPLEMENTATION_VENDOR.toString() to project.group,
                 Attributes.Name.MAIN_CLASS.toString() to application.mainClassName))
     }
 }
@@ -229,7 +240,8 @@ task<FatCapsule>("makeExecutable") {
 
     doLast {
         archivePath.setExecutable(true)
-        println("Executable File: ${archivePath.absolutePath.bold}".done)
+        val size = archivePath.length().toBinaryPrefixString()
+        println("Executable File: ${archivePath.absolutePath.bold} ($size)".done)
     }
 }
 
@@ -238,24 +250,25 @@ task<FatCapsule>("makeExecutable") {
  * Generate doc using dokka.
  */
 tasks.withType<DokkaTask> {
-    val src = "src/main/kotlin"
+    val src = "src/main"
     val out = "$projectDir/docs"
-    val format = DokkaFormat.KotlinWeb
+    val format = DokkaFormat.Html
     doFirst {
-        println("Cleaning ${out.bold} directory...".cyan)
+        println("Cleaning doc directory ${out.bold}...".cyan)
         project.delete(fileTree(out) {
             exclude("kotlin-*.png")
         })
     }
 
     moduleName = ""
+    sourceDirs = files(src)
     outputFormat = format.type
     outputDirectory = out
     jdkVersion = javaVersion.majorVersion.toInt()
-    includes = listOf("README.md")
+    includes = listOf("README.md", "CHANGELOG.md")
     val mapping = LinkMapping().apply {
         dir = src
-        url = "https://github.com/sureshg/kotlin-starter/blob/master/$src"
+        url = "${githubRepo.url}/blob/master/$src"
         suffix = "#L"
     }
     linkMappings = arrayListOf(mapping)
@@ -267,17 +280,18 @@ tasks.withType<DokkaTask> {
 }
 
 /**
- * Github release config and set token.
+ * Set Github token and publish.
  */
 github {
+    val tag = version.toString()
     baseUrl = "https://api.github.com"
-    owner = "sureshg"
-    repo = application.applicationName
-    tagName = version.toString()
+    owner = githubRepo.user
+    repo = githubRepo.repo
+    tagName = tag
     targetCommitish = "master"
-    name = "${application.applicationName} v$version"
-    val changelog = "${baseUrl.replace(".api", "", true)}/$owner/$repo/blob/$targetCommitish/CHANGELOG.md"
-    body = "$name release. Check [CHANGELOG.md]($changelog) for details."
+    name = "${application.applicationName.capitalize()} v$version"
+    val changelog = githubRepo.changelogUrl(branch = targetCommitish, tag = tag)
+    body = ":mega: $name release. Check [CHANGELOG.md]($changelog) for details. :tada:"
     setAssets(File(buildDir, "libs/${application.applicationName}").path)
 }
 
@@ -288,7 +302,7 @@ tasks.withType<ReleaseTask> {
 
     doLast {
         println("Published github release ${github.name}.".done)
-        println("Release URL: ${githubReleaseURL(owner = github.owner, repo = github.repo).bold}")
+        println("Release URL: ${githubRepo.releaseUrl().bold}")
     }
 
     description = "Publish Github release ${github.name}"

@@ -1,7 +1,9 @@
+import tasks.*
+import term.*
+
 /**
  * Some common tasks script.
  */
-
 task<MyExecTask>("exec-task") {
     command = listOf("ls", "-ltarh")
 }
