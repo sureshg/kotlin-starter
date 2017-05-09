@@ -27,7 +27,7 @@
     ```
     > The binary would be located at `build/libs/kotlin-starter`
     
-    Inorder to build a new version, change `appVersion` in the [gradle.properties](gradle.properties) or pass it to `./gradlew -q -PappVersion=1.0.5`
+    Inorder to build a new version, change `appVersion` in the [gradle.properties](gradle.properties) or pass it to `./gradlew -q -PappVersion=1.0.6`
 
 * API Doc
 
@@ -109,10 +109,10 @@
 [apidoc-svg]: https://img.shields.io/badge/apidoc-latest-ff69b4.svg?style=flat-square
 
 [cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md#105
-[cl-svg]: https://img.shields.io/badge/changelog-1.0.5-blue.svg?style=flat-square
+[cl-svg]: https://img.shields.io/badge/changelog-1.0.6-blue.svg?style=flat-square
 
 [release-url]: https://github.com/sureshg/kotlin-starter/releases/latest
-[download-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.5/kotlin-starter
+[download-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.6/kotlin-starter
 [release-svg]: https://img.shields.io/github/release/sureshg/kotlin-starter.svg?style=flat-square
 
 [license-url]: https://github.com/sureshg/kotlin-starter/blob/master/LICENSE

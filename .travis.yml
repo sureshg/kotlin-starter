@@ -9,8 +9,7 @@ before_script:
   - chmod +x gradlew
 
 script:
-  - ./gradlew jacocoTestReport
-  - ./gradlew makeExecutable
+  - ./gradlew jacocoTestReport makeExecutable
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

@@ -1,3 +1,10 @@
+## 1.0.6
+
+### Changes
+
+* Added [code coverage](https://codecov.io/gh/sureshg/kotlin-starter).
+* Added [travis build](https://travis-ci.org/sureshg/kotlin-starter) support.
+
 ## 1.0.5
 
 ### Changes

@@ -18,7 +18,8 @@
             "springBoot": "org.springframework.boot.gradle.SpringBootPluginExtension",
             "dependencyManagement": "io.spring.gradle.dependencymanagement.internal.dsl.StandardDependencyManagementExtension",
             "distributions": "org.gradle.api.distribution.DistributionContainer",
-            "idea": "org.gradle.plugins.ide.idea.model.IdeaModel"
+            "idea": "org.gradle.plugins.ide.idea.model.IdeaModel",
+            "jacoco": "org.gradle.testing.jacoco.plugins.JacocoPluginExtension"
         }
     }
 }
