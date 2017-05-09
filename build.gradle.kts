@@ -66,6 +66,7 @@ plugins {
 
     application
     idea
+    jacoco
     `help-tasks`
     id("org.jetbrains.kotlin.jvm") version ktPlugin
     id("org.jetbrains.kotlin.kapt") version ktPlugin
@@ -123,6 +124,19 @@ application {
  */
 kotlin {
     experimental.coroutines = ENABLE
+}
+
+/**
+ * Java code coverage metrics.
+ */
+tasks.withType<JacocoReport> {
+    reports {
+        xml.isEnabled = true
+        html.isEnabled = false
+        csv.isEnabled = false
+    }
+    val jacocoTestReport by tasks
+    jacocoTestReport.dependsOn("test")
 }
 
 /**

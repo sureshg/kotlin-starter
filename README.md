@@ -89,7 +89,6 @@
     ```
 
 
-
 #### Kotlin Build Script Compilation 
 
 [Script compilation][kotlin-slack-thread] happens in 4 steps:
@@ -121,6 +120,9 @@
 
 [travis-url]: https://travis-ci.org/sureshg/kotlin-starter/builds
 [travis-svg]: https://img.shields.io/travis/sureshg/kotlin-starter.svg?style=flat-square
+
+[codecov-url]: https://codecov.io/gh/sureshg/kotlin-starter
+[codecov-svg]: https://img.shields.io/codecov/c/github/sureshg/kotlin-starter.svg?style=flat-square
 
 [coverall-url]: https://coveralls.io/github/sureshg/kotlin-starter?branch=master
 [coverall-svg]: https://img.shields.io/coveralls/sureshg/kotlin-starter.svg?style=flat-square
