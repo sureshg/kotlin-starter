@@ -9,7 +9,7 @@ buildscript {
 }
 
 plugins {
-    val kotlinVersion = System.getProperty("kotlin.version") ?: "1.1.2-2"
+    val kotlinVersion = System.getProperty("kotlin.version")
     id("org.jetbrains.kotlin.jvm") version kotlinVersion
 }
 
