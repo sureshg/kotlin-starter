@@ -337,7 +337,8 @@ enum class BuildInfo(val attr: String) {
     CreatedBy("Created-By"),
     Title(Attributes.Name.IMPLEMENTATION_TITLE.toString()),
     Vendor(Attributes.Name.IMPLEMENTATION_VENDOR.toString()),
-    AppVersion(Attributes.Name.IMPLEMENTATION_VERSION.toString())
+    AppVersion(Attributes.Name.IMPLEMENTATION_VERSION.toString()),
+    MainClass(Attributes.Name.MAIN_CLASS.toString())
 }
 
 /**

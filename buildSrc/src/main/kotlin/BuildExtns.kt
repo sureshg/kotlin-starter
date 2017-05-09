@@ -1,6 +1,4 @@
-import term.bold
-import term.cyan
-import term.fg256
+import term.*
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.coroutines.experimental.buildSequence

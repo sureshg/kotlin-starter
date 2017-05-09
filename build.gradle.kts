@@ -1,5 +1,4 @@
 import term.*
-import BuildInfo.*
 import co.riiid.gradle.ReleaseTask
 import org.gradle.api.tasks.wrapper.Wrapper
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
@@ -17,7 +16,6 @@ import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
 import org.gradle.jvm.tasks.Jar
 import org.gradle.script.lang.kotlin.*
 import org.jetbrains.dokka.gradle.*
-import java.util.jar.Attributes
 
 
 buildscript {
@@ -192,17 +190,17 @@ compileJava.doFirst {
 tasks.withType<Jar> {
     manifest {
         attributes(mapOf(
-                Author.attr to appAuthor,
-                Date.attr to buildDateTime,
-                JDK.attr to "java.version".sysProp,
-                Target.attr to javaVersion,
-                OS.attr to "${"os.name".sysProp} ${"os.version".sysProp}",
-                KotlinVersion.attr to kotlinVersion,
-                CreatedBy.attr to "Gradle ${gradle.gradleVersion}",
-                Attributes.Name.IMPLEMENTATION_VERSION.toString() to appVersion,
-                Attributes.Name.IMPLEMENTATION_TITLE.toString() to application.applicationName,
-                Attributes.Name.IMPLEMENTATION_VENDOR.toString() to project.group,
-                Attributes.Name.MAIN_CLASS.toString() to application.mainClassName))
+                BuildInfo.Author.attr to appAuthor,
+                BuildInfo.Date.attr to buildDateTime,
+                BuildInfo.JDK.attr to "java.version".sysProp,
+                BuildInfo.Target.attr to javaVersion,
+                BuildInfo.OS.attr to "${"os.name".sysProp} ${"os.version".sysProp}",
+                BuildInfo.KotlinVersion.attr to kotlinVersion,
+                BuildInfo.CreatedBy.attr to "Gradle ${gradle.gradleVersion}",
+                BuildInfo.AppVersion.attr to appVersion,
+                BuildInfo.Title.attr to application.applicationName,
+                BuildInfo.Vendor.attr to project.group,
+                BuildInfo.MainClass.attr to application.mainClassName))
     }
 }
 
@@ -240,8 +238,8 @@ task<FatCapsule>("makeExecutable") {
 
     doLast {
         archivePath.setExecutable(true)
-        val size = archivePath.length().toBinaryPrefixString()
-        println("Executable File: ${archivePath.absolutePath.bold} ($size)".done)
+        val size = archivePath.length().toBinaryPrefixString(si = true)
+        println("Executable File: ${archivePath.absolutePath.bold} (${size.bold})".done)
     }
 }
 

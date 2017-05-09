@@ -63,6 +63,7 @@ enum class AnsiColor(vararg val codes: Int) {
     Bg(48),
     BgEnd(49),
     HlEnd(22, 27, 39),
+    ResetColor(39, 49),
 
     // Foreground Hi-Intensity text colors
     HiBlack(90),
@@ -113,11 +114,6 @@ inline val String.esc: AnsiEsc get() = "$ESC[${this}m"
 inline val Int.esc get() = toString().esc
 
 /**
- * 0 is reset for all
- */
-val ESC_END = 0.esc
-
-/**
  * Returns an ANSI escape unicode of the int array.
  */
 inline val IntArray.esc get() = joinToString(";").esc
@@ -135,7 +131,7 @@ fun esc(vararg codes: Int) = codes.esc
 /**
  * Returns formatted string with given ANSI color codes.
  */
-fun String.color(vararg codes: Int) = "${codes.esc}$this$ESC_END"
+fun String.color(vararg codes: Int) = "${codes.esc}$this${AnsiColor.Reset.esc}"
 
 /**
  * Returns formatted string with given ANSI color.
