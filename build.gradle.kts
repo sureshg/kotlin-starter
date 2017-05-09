@@ -238,7 +238,7 @@ task<FatCapsule>("makeExecutable") {
 
     doLast {
         archivePath.setExecutable(true)
-        val size = archivePath.length().toBinaryPrefixString(si = true)
+        val size = archivePath.length().toBinaryPrefixString()
         println("Executable File: ${archivePath.absolutePath.bold} (${size.bold})".done)
     }
 }
