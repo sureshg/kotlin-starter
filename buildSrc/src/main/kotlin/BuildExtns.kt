@@ -7,9 +7,7 @@ import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.artifacts.dsl.DependencyHandler
-import org.gradle.script.lang.kotlin.creating
-import org.gradle.script.lang.kotlin.embeddedKotlinVersion
-import org.gradle.script.lang.kotlin.extra
+import org.gradle.script.lang.kotlin.*
 
 /**
  * Kotlin build script extension functions.
@@ -17,12 +15,9 @@ import org.gradle.script.lang.kotlin.extra
  * @author Suresh
  */
 
-val GradleSnapShotURL = "gradle.snap.url".sysProp
-
-/**
- * Returns the system property value of given string.
- */
 val String.sysProp: String get() = System.getProperty(this, "")
+
+val GradleSnapShotURL = "gradle.snap.url".sysProp
 
 fun getGskURL(version: String, type: DistributionType = ALL) = "$GradleSnapShotURL/gradle-script-kotlin-$version-${type.name.toLowerCase()}.zip"
 

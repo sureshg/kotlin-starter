@@ -1,4 +1,5 @@
 import term.*
+import BuildInfo.*
 import co.riiid.gradle.ReleaseTask
 import org.gradle.api.tasks.wrapper.Wrapper
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
@@ -16,7 +17,7 @@ import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
 import org.gradle.jvm.tasks.Jar
 import org.gradle.script.lang.kotlin.*
 import org.jetbrains.dokka.gradle.*
-
+import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
 
 buildscript {
     var javaVersion: JavaVersion by extra
@@ -92,7 +93,6 @@ apply {
     }.forEach {
         from(it.name)
     }
-
     plugin<DokkaPlugin>()
     plugin<DependencyManagementPlugin>()
 }
@@ -163,26 +163,23 @@ repositories {
 }
 
 dependencies {
-    val retrofitVersion = "2.2.0"
-    val coroutinesRetrofit = "0.5.0"
-    val moshiVersion = "1.4.0"
-    val jnrVersion = "3.0.37"
-    val immutableCollVersion = "0.1"
-    val ktSocketsVersion = "0.0.4"
-
-    compile(kotlinModule("stdlib-jre8", kotlinVersion))
-    compile(kotlinModule("reflect", kotlinVersion))
-    compile(kotlinxModule("coroutines-core", kotlinxVersion))
-    compile(kotlinxModule("collections-immutable", immutableCollVersion))
-    compile(kotlinxModule("kotlin-sockets", ktSocketsVersion))
-    compile("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    compile("com.squareup.moshi:moshi:$moshiVersion")
-    compile("com.github.jnr:jnr-posix:$jnrVersion")
-    compile("ru.gildor.coroutines:kotlin-coroutines-retrofit:$coroutinesRetrofit")
+    compile("org.jetbrains.kotlin:kotlin-stdlib-jre8")
+    compile("org.jetbrains.kotlin:kotlin-reflect")
+    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
+    compile("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.1")
+    compile("org.jetbrains.kotlinx:kotlin-sockets:0.0.4")
+    compile("com.squareup.retrofit2:retrofit:2.2.0")
+    compile("com.squareup.moshi:moshi:1.4.0")
+    compile("com.github.jnr:jnr-posix:3.0.37")
+    compile("ru.gildor.coroutines:kotlin-coroutines-retrofit:0.5.0")
     compile("org.springframework.boot:spring-boot-starter")
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }
 
+/**
+ * Kotlin Plugin version.
+ */
+val Project.kotlinPluginVersion get() = plugins.filterIsInstance<KotlinBasePluginWrapper>().firstOrNull()?.kotlinPluginVersion
 
 /**
  * Show source sets.
@@ -204,17 +201,17 @@ compileJava.doFirst {
 tasks.withType<Jar> {
     manifest {
         attributes(mapOf(
-                BuildInfo.Author.attr to appAuthor,
-                BuildInfo.Date.attr to buildDateTime,
-                BuildInfo.JDK.attr to "java.version".sysProp,
+                Author.attr to appAuthor,
+                Date.attr to buildDateTime,
+                JDK.attr to "java.version".sysProp,
                 BuildInfo.Target.attr to javaVersion,
-                BuildInfo.OS.attr to "${"os.name".sysProp} ${"os.version".sysProp}",
-                BuildInfo.KotlinVersion.attr to kotlinVersion,
-                BuildInfo.CreatedBy.attr to "Gradle ${gradle.gradleVersion}",
-                BuildInfo.AppVersion.attr to appVersion,
-                BuildInfo.Title.attr to application.applicationName,
-                BuildInfo.Vendor.attr to project.group,
-                BuildInfo.MainClass.attr to application.mainClassName))
+                OS.attr to "${"os.name".sysProp} ${"os.version".sysProp}",
+                KotlinVersion.attr to kotlinVersion,
+                CreatedBy.attr to "Gradle ${gradle.gradleVersion}",
+                AppVersion.attr to appVersion,
+                Title.attr to application.applicationName,
+                Vendor.attr to project.group,
+                MainClass.attr to application.mainClassName))
     }
 }
 
