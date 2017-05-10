@@ -7,6 +7,7 @@
         },
         "extensions": {
             "ext": "org.gradle.api.plugins.ExtraPropertiesExtension",
+            "buildScan": "com.gradle.scan.plugin.internal.api.c",
             "kotlin": "org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension",
             "kapt": "org.jetbrains.kotlin.gradle.plugin.KaptExtension",
             "defaultArtifacts": "org.gradle.api.internal.plugins.DefaultArtifactPublicationSet",

@@ -65,6 +65,7 @@ plugins {
     val dokkaPlugin = "dokka.version".sysProp
     val bootPlugin = "springboot.version".sysProp
 
+    id("com.gradle.build-scan") version "1.7.1"
     application
     idea
     jacoco
@@ -127,6 +128,19 @@ kotlin {
 }
 
 /**
+ * Enable build scan
+ */
+buildScan {
+    setLicenseAgreementUrl("https://gradle.com/terms-of-service")
+    setLicenseAgree("yes")
+    tag(appVersion.toString())
+    link("Repo URL", githubRepo.url)
+    buildFinished {
+        value("Build Result", failure?.message ?: "")
+    }
+}
+
+/**
  * Java code coverage metrics.
  */
 tasks.withType<JacocoReport> {
@@ -167,7 +181,7 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-reflect")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
     compile("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.1")
-    compile("org.jetbrains.kotlinx:kotlin-sockets:0.0.4")
+    compile("org.jetbrains.kotlinx:kotlin-sockets:0.0.4") //0.0.5
     compile("com.squareup.retrofit2:retrofit:2.2.0")
     compile("com.squareup.moshi:moshi:1.4.0")
     compile("com.github.jnr:jnr-posix:3.0.37")
