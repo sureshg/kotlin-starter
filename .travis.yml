@@ -4,6 +4,20 @@ sudo: false # Faster builds
 
 jdk:
     - oraclejdk8
+    - oraclejdk9
+
+env:
+  global:
+  - JVMLang=Kotlin
+
+matrix:
+  include:
+    - jdk: oraclejdk8
+    - jdk: oraclejdk9
+      env: JDK_JAVA_OPTIONS='--permit-illegal-access'
+      # JDK_JAVA_OPTIONS='--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED'
+  allow_failures:
+    - jdk: oraclejdk9
 
 before_script:
   - chmod +x gradlew

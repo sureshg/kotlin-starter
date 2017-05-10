@@ -204,7 +204,7 @@ tasks.withType<Jar> {
                 Author.attr to appAuthor,
                 Date.attr to buildDateTime,
                 JDK.attr to "java.version".sysProp,
-                BuildInfo.Target.attr to javaVersion,
+                BuildTarget.attr to javaVersion,
                 OS.attr to "${"os.name".sysProp} ${"os.version".sysProp}",
                 KotlinVersion.attr to kotlinVersion,
                 CreatedBy.attr to "Gradle ${gradle.gradleVersion}",

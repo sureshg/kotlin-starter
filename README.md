@@ -79,15 +79,6 @@
     # See task tree for build task
     $ ./gradlew :build :taskTree
     ```
-    
-* Another way to configure coroutine
-
-    ```kotlin
-     configure<KotlinProjectExtension> {
-          experimental.coroutines = ENABLE
-      }
-    ```
-
 
 #### Kotlin Build Script Compilation 
 

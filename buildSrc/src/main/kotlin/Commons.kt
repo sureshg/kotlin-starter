@@ -17,6 +17,7 @@ import kotlin.reflect.KClass
 import kotlin.text.Charsets.US_ASCII
 import kotlin.text.Charsets.UTF_8
 import sun.misc.HexDumpEncoder
+import java.util.jar.Attributes.Name.*
 
 /**
  * Common extension functions.
@@ -331,14 +332,14 @@ enum class BuildInfo(val attr: String) {
     Author("Built-By"),
     Date("Built-Date"),
     JDK("Build-Jdk"),
-    Target("Build-Target"),
+    BuildTarget("Build-Target"),
     OS("Build-OS"),
     KotlinVersion("Kotlin-Version"),
     CreatedBy("Created-By"),
-    Title(Attributes.Name.IMPLEMENTATION_TITLE.toString()),
-    Vendor(Attributes.Name.IMPLEMENTATION_VENDOR.toString()),
-    AppVersion(Attributes.Name.IMPLEMENTATION_VERSION.toString()),
-    MainClass(Attributes.Name.MAIN_CLASS.toString())
+    Title(IMPLEMENTATION_TITLE.toString()),
+    Vendor(IMPLEMENTATION_VENDOR.toString()),
+    AppVersion(IMPLEMENTATION_VERSION.toString()),
+    MainClass(MAIN_CLASS.toString())
 }
 
 /**
