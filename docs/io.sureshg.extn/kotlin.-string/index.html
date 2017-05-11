@@ -106,6 +106,20 @@ input string before doing the base64 decode operation.</p>
 </tr>
 <tr>
 <td>
+<a href="code-point-sequence.html">codePointSequence</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">String</span><span class="symbol">.</span><span class="identifier">codePointSequence</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Sequence</span><span class="symbol">&lt;</span><span class="identifier">Int</span><span class="symbol">&gt;</span></code>
+<p>Produces a <a href="#">Sequence</a> of the Unicode code points in the given <a href="#">String</a>.</p>
+</td>
+</tr>
+<tr>
+<td>
+<a href="code-point-width.html">codePointWidth</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">String</span><span class="symbol">.</span><span class="identifier">codePointWidth</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">Int</span></code></td>
+</tr>
+<tr>
+<td>
 <a href="color.html">color</a></td>
 <td>
 <code><span class="keyword">fun </span><span class="identifier">String</span><span class="symbol">.</span><span class="identifier">color</span><span class="symbol">(</span><span class="keyword">vararg</span> <span class="identifier" id="io.sureshg.extn$color(kotlin.String, kotlin.IntArray)/codes">codes</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span></code>
@@ -278,6 +292,12 @@ and whitespaces. ToDo - Replace with PemReader.</p>
 </tr>
 <tr>
 <td>
+<a href="pad-lines-to-width.html">padLinesToWidth</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">String</span><span class="symbol">.</span><span class="identifier">padLinesToWidth</span><span class="symbol">(</span><span class="identifier" id="io.sureshg.extn$padLinesToWidth(kotlin.String, kotlin.Int)/width">width</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
 <a href="red.html">red</a></td>
 <td>
 <code><span class="keyword">val </span><span class="identifier">String</span><span class="symbol">.</span><span class="identifier">red</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
@@ -328,6 +348,12 @@ and whitespaces. ToDo - Replace with PemReader.</p>
 </tr>
 <tr>
 <td>
+<a href="trim-newline.html">trimNewline</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">String</span><span class="symbol">.</span><span class="identifier">trimNewline</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
+</tr>
+<tr>
+<td>
 <a href="underline.html">underline</a></td>
 <td>
 <code><span class="keyword">val </span><span class="identifier">String</span><span class="symbol">.</span><span class="identifier">underline</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
@@ -339,6 +365,12 @@ and whitespaces. ToDo - Replace with PemReader.</p>
 <code><span class="keyword">val </span><span class="identifier">String</span><span class="symbol">.</span><span class="identifier">warn</span><span class="symbol">: </span><span class="identifier">String</span></code>
 <p>Warn string</p>
 </td>
+</tr>
+<tr>
+<td>
+<a href="wrap-text.html">wrapText</a></td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">String</span><span class="symbol">.</span><span class="identifier">wrapText</span><span class="symbol">(</span><span class="identifier" id="io.sureshg.extn$wrapText(kotlin.String, kotlin.Int)/maxWidth">maxWidth</span><span class="symbol">:</span>&nbsp;<span class="identifier">Int</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">String</span></code></td>
 </tr>
 <tr>
 <td>
