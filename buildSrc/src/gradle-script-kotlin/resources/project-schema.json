@@ -14,10 +14,11 @@
             "reporting": "org.gradle.api.reporting.ReportingExtension",
             "allOpen": "org.jetbrains.kotlin.allopen.gradle.AllOpenExtension",
             "noArg": "org.jetbrains.kotlin.noarg.gradle.NoArgExtension",
-            "capsule": "us.kirchmeier.capsule.CapsuleGradlePlugin.CapsuleGradleExtension",
-            "github": "co.riiid.gradle.GithubExtension",
             "springBoot": "org.springframework.boot.gradle.SpringBootPluginExtension",
             "dependencyManagement": "io.spring.gradle.dependencymanagement.internal.dsl.StandardDependencyManagementExtension",
+            "shadow": "com.github.jengelman.gradle.plugins.shadow.ShadowExtension",
+            "capsule": "us.kirchmeier.capsule.CapsuleGradlePlugin.CapsuleGradleExtension",
+            "github": "co.riiid.gradle.GithubExtension",
             "distributions": "org.gradle.api.distribution.DistributionContainer",
             "idea": "org.gradle.plugins.ide.idea.model.IdeaModel",
             "jacoco": "org.gradle.testing.jacoco.plugins.JacocoPluginExtension"

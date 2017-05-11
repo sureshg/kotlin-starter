@@ -14,7 +14,9 @@
 
    [![Download][release-svg]][download-url]
 
-   > After download, make sure to set the execute permission (`chmod +x kotlin-starter`). Windows users can run the `executable jar`.
+   > After download, make sure to set the execute permission (`chmod +x kotlin-starter`). 
+   
+   > Windows users can run the `executable jar` - [![Download][execjar-svg]][execjar-url].
 
 ### Build
 
@@ -27,7 +29,7 @@
     ```
     > The binary would be located at `build/libs/kotlin-starter`
     
-    Inorder to build a new version, change `appVersion` in the [gradle.properties](gradle.properties) or pass it to `./gradlew -q -PappVersion=1.0.6`
+    Inorder to build a new version, change `appVersion` in the [gradle.properties](gradle.properties) or pass it to `./gradlew -q -PappVersion=1.0.7`
 
 * API Doc
 
@@ -99,12 +101,15 @@
 [apidoc-url]: https://sureshg.github.io/kotlin-starter/
 [apidoc-svg]: https://img.shields.io/badge/apidoc-latest-ff69b4.svg?style=flat-square
 
-[cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md#106
-[cl-svg]: https://img.shields.io/badge/changelog-1.0.6-blue.svg?style=flat-square
+[cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md#107
+[cl-svg]: https://img.shields.io/badge/changelog-1.0.7-blue.svg?style=flat-square
 
 [release-url]: https://github.com/sureshg/kotlin-starter/releases/latest
-[download-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.6/kotlin-starter
+[download-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.7/kotlin-starter
 [release-svg]: https://img.shields.io/github/release/sureshg/kotlin-starter.svg?style=flat-square
+
+[execjar-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.7/kotlin-starter.jar
+[execjar-svg]: https://img.shields.io/badge/execjar-1.0.7-00BCD4.svg?style=flat-square
 
 [license-url]: https://github.com/sureshg/kotlin-starter/blob/master/LICENSE
 [license-svg]: https://img.shields.io/github/license/sureshg/kotlin-starter.svg?style=flat-square

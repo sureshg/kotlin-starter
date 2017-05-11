@@ -339,7 +339,9 @@ enum class BuildInfo(val attr: String) {
     Title(IMPLEMENTATION_TITLE.toString()),
     Vendor(IMPLEMENTATION_VENDOR.toString()),
     AppVersion(IMPLEMENTATION_VERSION.toString()),
-    MainClass(MAIN_CLASS.toString())
+    MainClass(MAIN_CLASS.toString()),
+    ClassPath(CLASS_PATH.toString()),
+    ContentType(CONTENT_TYPE.toString())
 }
 
 /**

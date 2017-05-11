@@ -10,7 +10,11 @@ matrix:
   include:
     - jdk: oraclejdk8
     - jdk: oraclejdk9
-      addons: {apt: {packages: [oracle-java9-installer]}}
+      addons:
+        apt:
+          packages:
+            - oracle-java9-installer
+            - oracle-java9-set-default
       env: JDK_JAVA_OPTIONS='--permit-illegal-access'
       # JDK_JAVA_OPTIONS='--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED'
   allow_failures:
@@ -20,7 +24,7 @@ before_script:
   - chmod +x gradlew
 
 script:
-  - ./gradlew jacocoTestReport makeExecutable
+  - ./gradlew jacocoTestReport makeExecutable --no-daemon --scan
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

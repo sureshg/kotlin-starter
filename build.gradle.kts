@@ -18,6 +18,8 @@ import org.gradle.jvm.tasks.Jar
 import org.gradle.script.lang.kotlin.*
 import org.jetbrains.dokka.gradle.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
+import com.github.benmanes.gradle.versions.updates.*
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 buildscript {
     var javaVersion: JavaVersion by extra
@@ -64,9 +66,11 @@ plugins {
     val ktPlugin = "kotlin.version".sysProp
     val dokkaPlugin = "dokka.version".sysProp
     val bootPlugin = "springboot.version".sysProp
+    val shadowPlugin = "shadow.version".sysProp
 
     id("com.gradle.build-scan") version "1.7.1"
     application
+    java
     idea
     jacoco
     `help-tasks`
@@ -78,11 +82,13 @@ plugins {
     id("org.jetbrains.kotlin.plugin.jpa") version ktPlugin
     id("org.jetbrains.kotlin.android") version ktPlugin apply false
     id("org.jetbrains.kotlin.android.extensions") version ktPlugin apply false
+    id("org.springframework.boot") version bootPlugin
+    id("com.github.johnrengelman.shadow") version shadowPlugin
+    // id("org.jetbrains.dokka") version dokkaPlugin
     id("us.kirchmeier.capsule") version "1.0.2"
     id("com.dorongold.task-tree") version "1.3"
     id("co.riiid.gradle") version "0.4.2"
-    id("org.springframework.boot") version bootPlugin
-    // id("org.jetbrains.dokka") version dokkaPlugin
+    id("com.github.ben-manes.versions") version "0.14.0"
 }
 
 /**
@@ -134,7 +140,7 @@ buildScan {
     setLicenseAgreementUrl("https://gradle.com/terms-of-service")
     setLicenseAgree("yes")
     tag(appVersion.toString())
-    link("Repo URL", githubRepo.url)
+    link("GitHub", githubRepo.url)
     buildFinished {
         value("Build Result", failure?.message ?: "")
     }
@@ -169,6 +175,25 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+/**
+ * Dependency version check. The current resolution strategy
+ * would disallow release candidates as upgradable versions.
+ */
+tasks.withType<DependencyUpdatesTask> {
+    revision = "release"
+    outputFormatter = "plain"
+    description = "Displays the dependency updates for ${project.name} v$appVersion"
+    resolutionStrategy = closureOf<ComponentSelectionRules> {
+        all { selection: ComponentSelection ->
+            val rcs = listOf("alpha", "beta", "rc", "cr", "m")
+            val rejected = rcs.any {
+                selection.candidate.version.matches("/(?i).*[.-]$it[.\\d-]*/".toRegex())
+            }
+            if (rejected) selection.reject("Release candidate.")
+        }
+    }
+}
+
 repositories {
     gradleScriptKotlin()
     maven { setUrl(kotlinEAPRepo) }
@@ -181,7 +206,7 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-reflect")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
     compile("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.1")
-    compile("org.jetbrains.kotlinx:kotlin-sockets:0.0.4") //0.0.5
+    compile("org.jetbrains.kotlinx:kotlin-sockets:0.0.5")
     compile("com.squareup.retrofit2:retrofit:2.2.0")
     compile("com.squareup.moshi:moshi:1.4.0")
     compile("com.github.jnr:jnr-posix:3.0.37")
@@ -242,7 +267,7 @@ tasks.withType<ProcessResources> {
 /**
  * Make executable
  */
-task<FatCapsule>("makeExecutable") {
+val capsule = task<FatCapsule>("makeExecutable") {
     val minJavaVer = javaVersion.toString()
     val appName = application.applicationName
     val appMainClass = application.mainClassName
@@ -259,7 +284,7 @@ task<FatCapsule>("makeExecutable") {
         minJavaVersion = minJavaVer
     }
     description = "Create $archiveName executable."
-    dependsOn("clean")
+    dependsOn("clean", "shadowJar")
 
     doLast {
         archivePath.setExecutable(true)
@@ -268,6 +293,18 @@ task<FatCapsule>("makeExecutable") {
     }
 }
 
+/**
+ * Creates fat-jar/uber-jar.
+ */
+val shadowTasks = tasks.withType<ShadowJar> {
+    description = "Create a fat JAR of ${project.name} v$appVersion and runtime dependencies."
+    classifier = ""
+    version = ""
+    doLast {
+        val size = archivePath.length().toBinaryPrefixString()
+        println("Far Jar: ${archivePath.path.bold} (${size.bold})".done)
+    }
+}
 
 /**
  * Generate doc using dokka.
@@ -315,7 +352,7 @@ github {
     name = "${application.applicationName.capitalize()} v$version"
     val changelog = githubRepo.changelogUrl(branch = targetCommitish, tag = tag)
     body = ":mega: $name release. Check [CHANGELOG.md]($changelog) for details. :tada:"
-    setAssets(File(buildDir, "libs/${application.applicationName}").path)
+    setAssets(capsule.archivePath.path, shadowTasks.first().archivePath?.path)
 }
 
 tasks.withType<ReleaseTask> {
