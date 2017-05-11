@@ -1,3 +1,10 @@
+## 1.0.7
+
+### Changes
+
+* Added executable jar for windows users.
+* Travis JDK9 preparation.
+
 ## 1.0.6
 
 ### Changes
