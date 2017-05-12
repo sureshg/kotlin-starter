@@ -17,11 +17,22 @@ import org.gradle.script.lang.kotlin.*
 
 val String.sysProp: String get() = System.getProperty(this, "")
 
-val GradleSnapShotURL = "gradle.snap.url".sysProp
+val GRADLE_SNAPSHOT_URL = "gradle.snap.url".sysProp
 
-fun getGskURL(version: String, type: DistributionType = ALL) = "$GradleSnapShotURL/gradle-script-kotlin-$version-${type.name.toLowerCase()}.zip"
+fun getGskURL(version: String, type: DistributionType = ALL) = "$GRADLE_SNAPSHOT_URL/gradle-script-kotlin-$version-${type.name.toLowerCase()}.zip"
 
 val buildDateTime: String by lazy { ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a z")) }
+
+/**
+ * Really Executable Jar header.
+ *
+ * @see https://goo.gl/Y8VvR7
+ */
+val EXEC_JAR_HEADER = """|#!/bin/sh
+                         |
+                         |exec java -jar "$0" "$@"
+                         |
+                      """.trimMargin()
 
 /**
  * Returns [GithubRepo] config for the current project.

@@ -267,7 +267,7 @@ tasks.withType<ProcessResources> {
 /**
  * Make executable
  */
-val capsule = task<FatCapsule>("makeExecutable") {
+val capsuleTask = task<FatCapsule>("makeExecutable") {
     val minJavaVer = javaVersion.toString()
     val appName = application.applicationName
     val appMainClass = application.mainClassName
@@ -352,7 +352,7 @@ github {
     name = "${application.applicationName.capitalize()} v$version"
     val changelog = githubRepo.changelogUrl(branch = targetCommitish, tag = tag)
     body = ":mega: $name release. Check [CHANGELOG.md]($changelog) for details. :tada:"
-    setAssets(capsule.archivePath.path, shadowTasks.first().archivePath?.path)
+    setAssets(capsuleTask.archivePath.path, shadowTasks.first().archivePath?.path)
 }
 
 tasks.withType<ReleaseTask> {
@@ -410,6 +410,3 @@ task("async") {
  * Set default task
  */
 defaultTasks("clean", "tasks", "--all")
-
-
-
