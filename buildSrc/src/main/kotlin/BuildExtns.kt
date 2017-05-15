@@ -1,13 +1,16 @@
+import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.tasks.SourceSet
+import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
+import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
+import org.gradle.script.lang.kotlin.*
 import term.*
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.coroutines.experimental.buildSequence
-import org.gradle.api.tasks.wrapper.Wrapper.*
-import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
-import org.gradle.api.Project
-import org.gradle.api.Task
-import org.gradle.api.artifacts.dsl.DependencyHandler
-import org.gradle.script.lang.kotlin.*
 
 /**
  * Kotlin build script extension functions.
@@ -77,6 +80,22 @@ fun Project.printHeader(version: Any?, embdKtVersion: String = embeddedKotlinVer
     }
     println()
 }
+
+/**
+ * Java/Kotlin source set extensions.
+ *
+ * @see https://goo.gl/1FR6qw
+ */
+fun Project.sourceSets(block: SourceSetContainer.() -> Unit) = convention.getPlugin<JavaPluginConvention>().sourceSets.apply(block)
+
+
+/**
+ * Main and test source config extensions.
+ */
+val SourceSetContainer.main: SourceSet get() = this["main"]
+val SourceSetContainer.test: SourceSet get() = this["test"]
+fun SourceSetContainer.main(block: SourceSet.() -> Unit) = main.apply(block)
+fun SourceSetContainer.test(block: SourceSet.() -> Unit) = test.apply(block)
 
 /**
  * Gets the value of the specified environment variable. If it's not set (null),

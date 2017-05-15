@@ -29,7 +29,7 @@
     ```
     > The binary would be located at `build/libs/kotlin-starter`
     
-    Inorder to build a new version, change `appVersion` in the [gradle.properties](gradle.properties) or pass it to `./gradlew -q -PappVersion=1.0.8`
+    Inorder to build a new version, change `appVersion` in the [gradle.properties](gradle.properties) or pass it to `./gradlew -q -PappVersion=1.0.9`
 
 * API Doc
 
@@ -101,15 +101,15 @@
 [apidoc-url]: https://sureshg.github.io/kotlin-starter/
 [apidoc-svg]: https://img.shields.io/badge/api--doc-latest-ff69b4.svg?style=flat-square
 
-[cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md#108
-[cl-svg]: https://img.shields.io/badge/change--log-1.0.8-blue.svg?style=flat-square
+[cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md#109
+[cl-svg]: https://img.shields.io/badge/change--log-1.0.9-blue.svg?style=flat-square
 
 [release-url]: https://github.com/sureshg/kotlin-starter/releases/latest
-[download-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.8/kotlin-starter
+[download-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.9/kotlin-starter
 [release-svg]: https://img.shields.io/github/release/sureshg/kotlin-starter.svg?style=flat-square
 
-[execjar-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.8/kotlin-starter.jar
-[execjar-svg]: https://img.shields.io/badge/exec--jar-1.0.8-00BCD4.svg?style=flat-square
+[execjar-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.9/kotlin-starter.jar
+[execjar-svg]: https://img.shields.io/badge/exec--jar-1.0.9-00BCD4.svg?style=flat-square
 
 [license-url]: https://github.com/sureshg/kotlin-starter/blob/master/LICENSE
 [license-svg]: https://img.shields.io/github/license/sureshg/kotlin-starter.svg?style=flat-square

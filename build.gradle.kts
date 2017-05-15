@@ -223,17 +223,21 @@ dependencies {
 val Project.kotlinPluginVersion get() = plugins.filterIsInstance<KotlinBasePluginWrapper>().firstOrNull()?.kotlinPluginVersion
 
 /**
- * Show source sets.
+ * Source set configuration
  */
-val compileJava: JavaCompile by tasks
-compileJava.doFirst {
-    println("====== Source Sets ======")
-    java.sourceSets.asMap.forEach { name, srcSet ->
-        val ktSrcSet = (srcSet as HasConvention).convention.getPlugin<KotlinSourceSet>()
-        println("Java-${name.capitalize()} => ${srcSet.allSource.srcDirs.map { it.name }}")
-        println("Kotlin-${name.capitalize()} => ${ktSrcSet.kotlin.srcDirs.map { it.name }}")
+val SourceSet.kotlin: SourceDirectorySet get() = (this as HasConvention).convention.getPlugin<KotlinSourceSet>().kotlin
+
+tasks.withType<JavaCompile> {
+    doFirst {
+        sourceSets {
+            main {
+                println("${name.capitalize()} => Java : ${java.srcDirs}, Kotlin: ${kotlin.srcDirs}, Resource: ${resources.srcDirs}".dot)
+            }
+            test {
+                println("${name.capitalize()} => Java : ${java.srcDirs}, Kotlin: ${kotlin.srcDirs}, Resource: ${resources.srcDirs}".dot)
+            }
+        }
     }
-    println("=========================")
 }
 
 /**

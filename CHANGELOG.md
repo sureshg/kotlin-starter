@@ -1,3 +1,16 @@
+## 1.0.9
+
+### Changes
+
+* Add source set config.
+
+## 1.0.8
+
+### Changes
+
+* Doc generation from template.
+* Misc fixes.
+
 ## 1.0.7
 
 ### Changes
