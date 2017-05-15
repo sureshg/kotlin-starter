@@ -24,6 +24,11 @@ fun getGskURL(version: String, type: DistributionType = ALL) = "$GRADLE_SNAPSHOT
 val buildDateTime: String by lazy { ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a z")) }
 
 /**
+ * Returns [true] if it's running on IntelliJ IDEs.
+ */
+val isIdea = "idea.executable".sysProp == "idea"
+
+/**
  * Really Executable Jar header.
  *
  * @see https://goo.gl/Y8VvR7

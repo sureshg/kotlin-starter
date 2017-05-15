@@ -25,4 +25,5 @@ fun main(args: Array<String>) {
     println("Immutable list1 : $list1 , Hashcode: ${list1.hashCode()}")
     println("Immutable list2 : $list2 , Hashcode: ${list2.hashCode()}")
     println("Immutable list3 : $list3 , Hashcode: ${list3.hashCode()}")
+    println(Interop().test("Kotlin"))
 }

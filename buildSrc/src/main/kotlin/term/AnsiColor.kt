@@ -252,3 +252,18 @@ inline val String.highvolt get() = "\u26A1 $this".yellow
  * Completed (Beer Glass) string.
  */
 inline val String.done get() = "\uD83C\uDF7A  $this".green
+
+/**
+ * OK option string.
+ */
+inline val String.tick get() = "[✓] $this"
+
+/**
+ * No option string
+ */
+inline val String.dash get() = "[-] $this"
+
+/**
+ * List item string.
+ */
+inline val String.dot get() = "• $this"

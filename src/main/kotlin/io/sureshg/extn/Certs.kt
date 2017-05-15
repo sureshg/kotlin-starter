@@ -70,7 +70,8 @@ enum class JSSEProp(val prop: String, val desc: String, val system: Boolean = tr
     HttpsProtocols("https.protocols", "Default HTTPS handshaking protocols"),
     TLSProtocols("jdk.tls.client.protocols", "Default Enabled TLS Protocols"),
     CertPathDisabledAlgos("jdk.certpath.disabledAlgorithms", "Disabled certificate verification cryptographic algorithms", false),
-    TLSDisabledAlgos("jdk.tls.disabledAlgorithms", "Disabled/Restricted Algorithms", false);
+    TLSDisabledAlgos("jdk.tls.disabledAlgorithms", "Disabled/Restricted Algorithms", false),
+    EntropyGatheringDaemon("java.security.egd", "Configure JRE entropy source (/dev/./urandom)");
 
     /**
      * Sets the JSSE system/security property to the given value.

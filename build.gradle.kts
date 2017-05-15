@@ -20,6 +20,7 @@ import org.jetbrains.dokka.gradle.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
 import com.github.benmanes.gradle.versions.updates.*
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.apache.tools.ant.filters.ReplaceTokens
 
 buildscript {
     var javaVersion: JavaVersion by extra
@@ -206,12 +207,13 @@ dependencies {
     compile("org.jetbrains.kotlin:kotlin-reflect")
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
     compile("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.1")
-    compile("org.jetbrains.kotlinx:kotlin-sockets:0.0.5")
-    compile("com.squareup.retrofit2:retrofit:2.2.0")
+    compile("org.jetbrains.kotlinx:kotlin-sockets:0.0.10")
+    compile("com.squareup.retrofit2:retrofit:2.3.0")
     compile("com.squareup.moshi:moshi:1.4.0")
-    compile("com.github.jnr:jnr-posix:3.0.37")
+    compile("com.github.jnr:jnr-posix:3.0.41")
     compile("ru.gildor.coroutines:kotlin-coroutines-retrofit:0.5.0")
     compile("org.springframework.boot:spring-boot-starter")
+    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }
 
@@ -279,7 +281,7 @@ val capsuleTask = task<FatCapsule>("makeExecutable") {
         applicationName = appName
         applicationClass = appMainClass
         applicationVersion = version
-        jvmArgs = listOf("-client")
+        jvmArgs = listOf("-client", "-Djava.security.egd=file:/dev/./urandom")
         args = listOf("$*")
         minJavaVersion = minJavaVer
     }
@@ -297,12 +299,12 @@ val capsuleTask = task<FatCapsule>("makeExecutable") {
  * Creates fat-jar/uber-jar.
  */
 val shadowTasks = tasks.withType<ShadowJar> {
-    description = "Create a fat JAR of ${project.name} v$appVersion and runtime dependencies."
     classifier = ""
     version = ""
+    description = "Create a fat JAR of ${project.name} v$appVersion and runtime dependencies."
     doLast {
         val size = archivePath.length().toBinaryPrefixString()
-        println("Far Jar: ${archivePath.path.bold} (${size.bold})".done)
+        println("FatJar: ${archivePath.path.bold} (${size.bold})".done)
     }
 }
 
@@ -316,7 +318,7 @@ tasks.withType<DokkaTask> {
     doFirst {
         println("Cleaning doc directory ${out.bold}...".cyan)
         project.delete(fileTree(out) {
-            exclude("kotlin-*.png")
+            exclude("logos/**", "templates/**")
         })
     }
 
@@ -332,11 +334,43 @@ tasks.withType<DokkaTask> {
         suffix = "#L"
     }
     linkMappings = arrayListOf(mapping)
-    description = "Generate docs in ${format.desc} format."
+    description = "Generate ${project.name} v$appVersion docs in ${format.desc} format."
 
     doLast {
         println("Generated ${format.desc} format docs to ${outputDirectory.bold}".done)
     }
+}
+
+/**
+ * Generate ReadMe for the project.
+ */
+task<Copy>("generateReadMe") {
+    val version = appVersion.toString()
+    val tokens = mapOf("version" to version,
+            "versionBadge" to version.replace("-", "--"),
+            "kotlin" to kotlinVersion,
+            "kotlinBadge" to kotlinVersion.replace("-", "--"),
+            "changelog" to version.replace(".", ""),
+            "project" to project.name)
+    inputs.properties(tokens)
+    from("docs/templates")
+    into(projectDir)
+    rename("_TMPL", "")
+    include("*.md")
+    filter<ReplaceTokens>("tokens" to tokens)
+    filteringCharset = "UTF-8"
+    description = "Generate README.md for ${application.applicationName.capitalize()} v$version release."
+}
+
+/**
+ * Prepare the docs and release version.
+ */
+task("prepareRelease") {
+    description = "Prepare ${application.applicationName.capitalize()} v$version release."
+    doLast {
+        println("Make sure to commit the doc changes before doing ${"./gradlew githubRelease".bold}".dot.cyan)
+    }
+    dependsOn("generateReadMe", "dokka")
 }
 
 /**
