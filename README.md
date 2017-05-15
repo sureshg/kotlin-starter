@@ -1,8 +1,8 @@
 <div align="center">
 
-# <img src="docs/kotlin-icon.png" alt="Kotlin" width=25 height=25> Kotlin Starter 
+# <img src="docs/logos/kotlin-icon.png" alt="Kotlin" width=25 height=25> Kotlin Starter 
 
- [![version][release-svg]][release-url] [![changelog][cl-svg]][cl-url] [![build][travis-svg]][travis-url] [![api-doc][apidoc-svg]][apidoc-url] [![gitter][gitter-svg]][gitter-url] [![license][license-svg]][license-url] 
+ [![version][release-svg]][release-url] [![changelog][cl-svg]][cl-url] [![build][travis-svg]][travis-url] [![api-doc][apidoc-svg]][apidoc-url] [![gitter][gitter-svg]][gitter-url] [![license][license-svg]][license-url] [![kotlin][kotlin-svg]][kotlin-url] 
 
  A starter template for my [kotlin][kotlin] projects using [Gradle Script Kotlin][gsk]!
  
@@ -29,7 +29,7 @@
     ```
     > The binary would be located at `build/libs/kotlin-starter`
     
-    Inorder to build a new version, change `appVersion` in the [gradle.properties](gradle.properties) or pass it to `./gradlew -q -PappVersion=1.0.7`
+    Inorder to build a new version, change `appVersion` in the [gradle.properties](gradle.properties) or pass it to `./gradlew -q -PappVersion=1.0.8`
 
 * API Doc
 
@@ -99,17 +99,17 @@
 <!-- Badges -->
 
 [apidoc-url]: https://sureshg.github.io/kotlin-starter/
-[apidoc-svg]: https://img.shields.io/badge/apidoc-latest-ff69b4.svg?style=flat-square
+[apidoc-svg]: https://img.shields.io/badge/api--doc-latest-ff69b4.svg?style=flat-square
 
-[cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md#107
-[cl-svg]: https://img.shields.io/badge/changelog-1.0.7-blue.svg?style=flat-square
+[cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md#108
+[cl-svg]: https://img.shields.io/badge/change--log-1.0.8-blue.svg?style=flat-square
 
 [release-url]: https://github.com/sureshg/kotlin-starter/releases/latest
-[download-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.7/kotlin-starter
+[download-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.8/kotlin-starter
 [release-svg]: https://img.shields.io/github/release/sureshg/kotlin-starter.svg?style=flat-square
 
-[execjar-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.7/kotlin-starter.jar
-[execjar-svg]: https://img.shields.io/badge/execjar-1.0.7-00BCD4.svg?style=flat-square
+[execjar-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.0.8/kotlin-starter.jar
+[execjar-svg]: https://img.shields.io/badge/exec--jar-1.0.8-00BCD4.svg?style=flat-square
 
 [license-url]: https://github.com/sureshg/kotlin-starter/blob/master/LICENSE
 [license-svg]: https://img.shields.io/github/license/sureshg/kotlin-starter.svg?style=flat-square
@@ -129,10 +129,12 @@
 [gitter-url]: https://gitter.im/sureshg/kotlin-starter
 [gitter-svg]: https://img.shields.io/gitter/room/sureshg/kotlin-starter.svg
 
+[kotlin-url]: https://kotlinlang.org/
+[kotlin-svg]: https://img.shields.io/badge/kotlin-1.1.2--2-green.svg?style=flat-square
+
 [gsk]: https://github.com/gradle/gradle-script-kotlin
 [gsk-aot-doc]: https://github.com/gradle/gradle-script-kotlin/releases/tag/v0.8.0
 
-[kotlin]: https://kotlinlang.org/
 [kotlin-slack-thread]: https://kotlinlang.slack.com/archives/gradle/p1488489798002208
 [maven-google-mirror]: https://maven-central.storage.googleapis.com
 [java-download]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
