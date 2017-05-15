@@ -209,6 +209,7 @@ dependencies {
     compile("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.1")
     compile("org.jetbrains.kotlinx:kotlin-sockets:0.0.10")
     compile("com.squareup.retrofit2:retrofit:2.3.0")
+    compile("net.jodah:failsafe:1.0.4")
     compile("com.squareup.moshi:moshi:1.4.0")
     compile("com.github.jnr:jnr-posix:3.0.41")
     compile("ru.gildor.coroutines:kotlin-coroutines-retrofit:0.5.0")
