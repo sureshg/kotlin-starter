@@ -4,6 +4,7 @@ import sun.misc.HexDumpEncoder
 import java.io.File
 import java.io.IOException
 import java.net.JarURLConnection
+import java.net.URL
 import java.nio.file.FileVisitResult
 import java.nio.file.Files
 import java.nio.file.Path
@@ -173,6 +174,14 @@ inline val ByteArray.base64: ByteArray get() = Base64.getEncoder().encode(this)
 inline val ByteArray.base64Decode: ByteArray get() = Base64.getDecoder().decode(this)
 
 /**
+ * Returns the byte size of the common binary suffixes.
+ */
+inline val Int.KB get() = this * 1024L
+inline val Int.MB get() = this.KB * 1024
+inline val Int.GB get() = this.MB * 1024
+inline val Int.TB get() = this.GB * 1024
+
+/**
  * Returns human readable binary prefix for multiples of bytes.
  *
  * @param si [true] if it's SI unit, else it will be treated as Binary Unit.
@@ -324,6 +333,16 @@ inline val <T : Any> KClass<T>.jarManifest: Manifest? get() {
     val res = java.getResource("${java.simpleName}.class")
     val conn = res.openConnection()
     return if (conn is JarURLConnection) conn.manifest else null
+}
+
+/**
+ * Returns the jar url of the class. Returns the class file url
+ * if the class is not bundled in a jar.
+ */
+inline val <T : Any> KClass<T>.jarFileURL: URL get() {
+    val res = java.getResource("${java.simpleName}.class")
+    val conn = res.openConnection()
+    return if (conn is JarURLConnection) conn.jarFileURL else conn.url
 }
 
 /**
