@@ -47,6 +47,7 @@
     ```ruby
      $ export GITHUB_TOKEN=<token>
      $ cd @project@
+     $ ./gradlew prepareRelease
      $ ./gradlew githubRelease -q
     ```
     

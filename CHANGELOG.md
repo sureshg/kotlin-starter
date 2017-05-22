@@ -1,3 +1,10 @@
+## 1.1.0
+
+### Changes
+
+* Maven Pom file generation
+* Upgrade to GSK 0.9.0
+
 ## 1.0.9
 
 ### Changes

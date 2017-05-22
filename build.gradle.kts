@@ -1,9 +1,7 @@
 import term.*
 import BuildInfo.*
+import org.gradle.jvm.tasks.Jar
 import co.riiid.gradle.ReleaseTask
-import org.gradle.api.tasks.wrapper.Wrapper
-import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
-import org.gradle.language.jvm.tasks.ProcessResources
 import org.jetbrains.kotlin.gradle.dsl.Coroutines.ENABLE
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import us.kirchmeier.capsule.manifest.CapsuleManifest
@@ -11,16 +9,14 @@ import us.kirchmeier.capsule.spec.ReallyExecutableSpec
 import us.kirchmeier.capsule.task.*
 import kotlinx.coroutines.experimental.*
 import org.gradle.api.internal.HasConvention
-import org.gradle.api.tasks.compile.JavaCompile
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
-import org.gradle.jvm.tasks.Jar
-import org.gradle.script.lang.kotlin.*
 import org.jetbrains.dokka.gradle.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
 import com.github.benmanes.gradle.versions.updates.*
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.apache.tools.ant.filters.ReplaceTokens
+
 
 buildscript {
     var javaVersion: JavaVersion by extra
@@ -68,11 +64,13 @@ plugins {
     val dokkaPlugin = "dokka.version".sysProp
     val bootPlugin = "springboot.version".sysProp
     val shadowPlugin = "shadow.version".sysProp
+    val buildScan = "build-scan.version".sysProp
 
-    id("com.gradle.build-scan") version "1.7.1"
+    id("com.gradle.build-scan") version buildScan
     application
     java
     idea
+    maven
     jacoco
     `help-tasks`
     id("org.jetbrains.kotlin.jvm") version ktPlugin
@@ -81,15 +79,13 @@ plugins {
     id("org.jetbrains.kotlin.plugin.noarg") version ktPlugin
     id("org.jetbrains.kotlin.plugin.spring") version ktPlugin
     id("org.jetbrains.kotlin.plugin.jpa") version ktPlugin
-    id("org.jetbrains.kotlin.android") version ktPlugin apply false
-    id("org.jetbrains.kotlin.android.extensions") version ktPlugin apply false
     id("org.springframework.boot") version bootPlugin
     id("com.github.johnrengelman.shadow") version shadowPlugin
-    // id("org.jetbrains.dokka") version dokkaPlugin
     id("us.kirchmeier.capsule") version "1.0.2"
     id("com.dorongold.task-tree") version "1.3"
     id("co.riiid.gradle") version "0.4.2"
     id("com.github.ben-manes.versions") version "0.14.0"
+    // id("org.jetbrains.dokka") version dokkaPlugin
 }
 
 /**
@@ -145,6 +141,44 @@ buildScan {
     buildFinished {
         value("Build Result", failure?.message ?: "")
     }
+}
+
+/**
+ * A Configuration represents a group of artifacts and their dependencies.
+ */
+configurations {
+    "testConfig" {
+        configurations.compile.extendsFrom(this)
+        isTransitive = false
+    }
+}
+
+/**
+ * Maven pom config. Can use [GenerateMavenPom] if you are
+ * using maven-publish plugin .
+ */
+maven {
+    mvnpom {
+        withXml {
+            val deps = asNode().appendNode("dependencies")
+            configurations.compile.dependencies.forEach {
+                with(deps.appendNode("dependency")) {
+                    appendNode("groupId", it.group)
+                    appendNode("artifactId", it.name)
+                    appendNode("version", it.version)
+                }
+            }
+        }
+    }
+}
+
+task("generatePom") {
+    doLast {
+        println("Generating the Maven POM file.".fg256())
+        maven.pom().writeTo("build/resources/main/META-INF/maven/${project.group}/${project.name}/pom.xml")
+    }
+    tasks.getByName("jar").dependsOn(this)
+    description = "Generates the Maven POM file for ${project.name} v$appVersion"
 }
 
 /**
@@ -216,6 +250,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter")
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
     testCompile("org.springframework.boot:spring-boot-starter-test")
+    "testConfig"("com.google.code.findbugs:jsr305:3.0.2")
 }
 
 /**
@@ -232,10 +267,10 @@ tasks.withType<JavaCompile> {
     doFirst {
         sourceSets {
             main {
-                println("${name.capitalize()} => Java : ${java.srcDirs}, Kotlin: ${kotlin.srcDirs}, Resource: ${resources.srcDirs}".dot)
+                println("${name.capitalize()} => Java : ${java.srcDirs}, Kotlin: ${kotlin.srcDirs}, Resource: ${resources.srcDirs}".dot.fg256())
             }
             test {
-                println("${name.capitalize()} => Java : ${java.srcDirs}, Kotlin: ${kotlin.srcDirs}, Resource: ${resources.srcDirs}".dot)
+                println("${name.capitalize()} => Java : ${java.srcDirs}, Kotlin: ${kotlin.srcDirs}, Resource: ${resources.srcDirs}".dot.fg256())
             }
         }
     }
@@ -413,7 +448,7 @@ tasks.withType<ReleaseTask> {
  */
 task<Wrapper>("wrapper") {
     description = "Generate Gradle Script Kotlin wrapper v$wrapperVersion"
-    distributionType = ALL
+    distributionType = Wrapper.DistributionType.ALL
     distributionUrl = getGskURL(wrapperVersion)
     doFirst {
         println(description)

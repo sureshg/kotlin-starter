@@ -17,6 +17,7 @@ import kotlin.reflect.KClass
 import kotlin.text.Charsets.US_ASCII
 import kotlin.text.Charsets.UTF_8
 import sun.misc.HexDumpEncoder
+import java.net.URL
 import java.util.jar.Attributes.Name.*
 
 /**
@@ -323,6 +324,16 @@ inline val <T : Any> KClass<T>.jarManifest: Manifest? get() {
     val res = java.getResource("${java.simpleName}.class")
     val conn = res.openConnection()
     return if (conn is JarURLConnection) conn.manifest else null
+}
+
+/**
+ * Returns the jar url of the class. Returns the class file url
+ * if the class is not bundled in a jar.
+ */
+inline val <T : Any> KClass<T>.jarFileURL: URL get() {
+    val res = java.getResource("${java.simpleName}.class")
+    val conn = res.openConnection()
+    return if (conn is JarURLConnection) conn.jarFileURL else conn.url
 }
 
 /**

@@ -1,6 +1,4 @@
-import org.gradle.script.lang.kotlin.*
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
-import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.*
 
 buildscript {
     repositories {
@@ -9,7 +7,7 @@ buildscript {
 }
 
 plugins {
-    val kotlinVersion = System.getProperty("kotlin.version")
+    val kotlinVersion = System.getProperty("kotlin.version") ?: "1.1.2-2"
     id("org.jetbrains.kotlin.jvm") version kotlinVersion
 }
 
