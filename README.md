@@ -4,7 +4,7 @@
 
  [![version][release-svg]][release-url] [![changelog][cl-svg]][cl-url] [![build][travis-svg]][travis-url] [![api-doc][apidoc-svg]][apidoc-url] [![gitter][gitter-svg]][gitter-url] [![license][license-svg]][license-url] [![kotlin][kotlin-svg]][kotlin-url] 
 
- A starter template for my [kotlin][kotlin] projects using [Gradle Script Kotlin][gsk]!
+ A starter template for my [kotlin][kotlin-url] projects using [Gradle Script Kotlin][gsk]!
  
 </div>
 
