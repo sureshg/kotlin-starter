@@ -65,6 +65,7 @@ plugins {
     val bootPlugin = "springboot.version".sysProp
     val shadowPlugin = "shadow.version".sysProp
     val buildScan = "build-scan.version".sysProp
+    val ktlintVersion = "ktlint.version".sysProp
 
     id("com.gradle.build-scan") version buildScan
     application
@@ -86,6 +87,7 @@ plugins {
     id("co.riiid.gradle") version "0.4.2"
     id("com.github.ben-manes.versions") version "0.14.0"
     // id("org.jetbrains.dokka") version dokkaPlugin
+    // id("org.jlleitschuh.gradle.ktlint") version ktlintVersion
 }
 
 /**
