@@ -224,8 +224,8 @@ data class GithubRepo(val proto: String,
         val suffix = when {
             tag.isEmpty() -> ""
             else -> {
-                val ver = tag.replace(".", "")
-                if (keepAChangeLog) "$ver---$clDate" else ver
+                val anchor = "#${tag.replace(".", "")}"
+                if (keepAChangeLog) "$anchor---$clDate" else anchor
             }
         }
         return "$url/blob/$branch/CHANGELOG.md$suffix"
