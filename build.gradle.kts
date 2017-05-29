@@ -86,8 +86,8 @@ plugins {
     id("com.dorongold.task-tree") version "1.3"
     id("co.riiid.gradle") version "0.4.2"
     id("com.github.ben-manes.versions") version "0.14.0"
-    // id("org.jetbrains.dokka") version dokkaPlugin
     // id("org.jlleitschuh.gradle.ktlint") version ktlintVersion
+    // id("org.jetbrains.dokka") version dokkaPlugin
 }
 
 /**
@@ -236,6 +236,17 @@ repositories {
     maven { setUrl(kotlinEAPRepo) }
     maven { setUrl(kotlinxRepo) }
     mavenCentral()
+}
+
+/**
+ * Configures subproject's buildscript repo .A `buildscript` block is ignored
+ * unless it’s at the top level, the [ScriptHandler] instance available via
+ * the `buildscript` property however, can always be configured.
+ */
+subprojects {
+    buildscript.repositories {
+        mavenCentral()
+    }
 }
 
 dependencies {
@@ -392,7 +403,7 @@ task<Copy>("generateReadMe") {
             "versionBadge" to version.replace("-", "--"),
             "kotlin" to kotlinVersion,
             "kotlinBadge" to kotlinVersion.replace("-", "--"),
-            "changelog" to version.replace(".", ""),
+            "changelogUrl" to githubRepo.changelogUrl(tag = version),
             "project" to project.name)
     inputs.properties(tokens)
     from("docs/templates")

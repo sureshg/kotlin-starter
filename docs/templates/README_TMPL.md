@@ -102,7 +102,7 @@
 [apidoc-url]: https://sureshg.github.io/@project@/
 [apidoc-svg]: https://img.shields.io/badge/api--doc-latest-ff69b4.svg?style=flat-square
 
-[cl-url]: https://github.com/sureshg/@project@/blob/master/CHANGELOG.md#@changelog@
+[cl-url]: @changelogUrl@
 [cl-svg]: https://img.shields.io/badge/change--log-@versionBadge@-blue.svg?style=flat-square
 
 [release-url]: https://github.com/sureshg/@project@/releases/latest

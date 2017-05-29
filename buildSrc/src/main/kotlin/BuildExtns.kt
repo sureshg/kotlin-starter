@@ -12,6 +12,7 @@ import org.gradle.script.lang.kotlin.*
 import term.bold
 import term.cyan
 import term.fg256
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.coroutines.experimental.buildSequence
@@ -196,6 +197,13 @@ data class GithubRepo(val proto: String,
                       val url: String = "https://$baseUrl/$user/$repo") {
 
     /**
+     * Change log date format.
+     */
+    companion object {
+        val clDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    }
+
+    /**
      * Returns the github release url for the specific [tag].
      */
     fun releaseUrl(tag: String = "latest") = when (tag) {
@@ -210,9 +218,16 @@ data class GithubRepo(val proto: String,
 
     /**
      *  Returns CHANGELOG.md url for the specified [branch] and [tag].
+     *  Set [keepAChangeLog] to [true] for http://keepachangelog.com/ style.
      */
-    fun changelogUrl(branch: String = this.branch, tag: String? = null): String {
-        val suffix = if (tag != null) "#${tag.replace(".", "")}" else ""
+    fun changelogUrl(branch: String = this.branch, tag: String = "", keepAChangeLog: Boolean = true): String {
+        val suffix = when {
+            tag.isEmpty() -> ""
+            else -> {
+                val ver = tag.replace(".", "")
+                if (keepAChangeLog) "$ver---$clDate" else ver
+            }
+        }
         return "$url/blob/$branch/CHANGELOG.md$suffix"
     }
 }
