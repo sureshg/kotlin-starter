@@ -66,6 +66,7 @@ plugins {
     val shadowPlugin = "shadow.version".sysProp
     val buildScan = "build-scan.version".sysProp
     val ktlintVersion = "ktlint.version".sysProp
+    val gradleVersion = "gradle-versions.version".sysProp
 
     id("com.gradle.build-scan") version buildScan
     application
@@ -82,10 +83,10 @@ plugins {
     id("org.jetbrains.kotlin.plugin.jpa") version ktPlugin
     id("org.springframework.boot") version bootPlugin
     id("com.github.johnrengelman.shadow") version shadowPlugin
+    id("com.github.ben-manes.versions") version gradleVersion
     id("us.kirchmeier.capsule") version "1.0.2"
     id("com.dorongold.task-tree") version "1.3"
     id("co.riiid.gradle") version "0.4.2"
-    id("com.github.ben-manes.versions") version "0.14.0"
     // id("org.jlleitschuh.gradle.ktlint") version ktlintVersion
     // id("org.jetbrains.dokka") version dokkaPlugin
 }
@@ -99,6 +100,7 @@ apply {
     }.forEach {
         from(it.name)
     }
+
     plugin<DokkaPlugin>()
     plugin<DependencyManagementPlugin>()
 }
@@ -214,19 +216,22 @@ tasks.withType<KotlinCompile> {
 
 /**
  * Dependency version check. The current resolution strategy
- * would disallow release candidates as upgradable versions.
+ * would disallow (only if "DisallowRC" env variable is set)
+ * release candidates as upgradable versions.
  */
 tasks.withType<DependencyUpdatesTask> {
-    revision = "release"
+    revision = "milestone"
     outputFormatter = "plain"
-    description = "Displays the dependency updates for ${project.name} v$appVersion"
-    resolutionStrategy = closureOf<ComponentSelectionRules> {
-        all { selection: ComponentSelection ->
-            val rcs = listOf("alpha", "beta", "rc", "cr", "m")
-            val rejected = rcs.any {
-                selection.candidate.version.matches("/(?i).*[.-]$it[.\\d-]*/".toRegex())
+    description = "Displays the $revision dependency updates for ${project.name} v$appVersion"
+    if (System.getenv("DisallowRC").toBoolean()) {
+        resolutionStrategy = closureOf<ComponentSelectionRules> {
+            all { selection: ComponentSelection ->
+                val rcs = listOf("alpha", "beta", "rc", "cr", "m")
+                val rejected = rcs.any {
+                    selection.candidate.version.matches("/(?i).*[.-]$it[.\\d-]*/".toRegex())
+                }
+                if (rejected) selection.reject("Release candidate.")
             }
-            if (rejected) selection.reject("Release candidate.")
         }
     }
 }
@@ -257,7 +262,7 @@ dependencies {
     compile("org.jetbrains.kotlinx:kotlin-sockets:0.0.10")
     compile("com.squareup.retrofit2:retrofit:2.3.0")
     compile("net.jodah:failsafe:1.0.4")
-    compile("com.squareup.moshi:moshi:1.4.0")
+    compile("com.squareup.moshi:moshi:1.5.0")
     compile("com.github.jnr:jnr-posix:3.0.41")
     compile("ru.gildor.coroutines:kotlin-coroutines-retrofit:0.5.0")
     compile("org.springframework.boot:spring-boot-starter")
@@ -379,6 +384,7 @@ tasks.withType<DokkaTask> {
     sourceDirs = files(src)
     outputFormat = format.type
     outputDirectory = out
+    skipEmptyPackages = true
     jdkVersion = javaVersion.majorVersion.toInt()
     includes = listOf("README.md", "CHANGELOG.md")
     val mapping = LinkMapping().apply {
