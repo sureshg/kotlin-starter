@@ -100,7 +100,6 @@ apply {
     }.forEach {
         from(it.name)
     }
-
     plugin<DokkaPlugin>()
     plugin<DependencyManagementPlugin>()
 }
