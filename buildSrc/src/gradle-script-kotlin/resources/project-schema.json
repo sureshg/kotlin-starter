@@ -18,6 +18,7 @@
             "springBoot": "org.springframework.boot.gradle.SpringBootPluginExtension",
             "dependencyManagement": "io.spring.gradle.dependencymanagement.internal.dsl.StandardDependencyManagementExtension",
             "shadow": "com.github.jengelman.gradle.plugins.shadow.ShadowExtension",
+            "ktlint": "org.jlleitschuh.gradle.ktlint.KtlintExtension",
             "capsule": "us.kirchmeier.capsule.CapsuleGradlePlugin.CapsuleGradleExtension",
             "github": "co.riiid.gradle.GithubExtension",
             "distributions": "org.gradle.api.distribution.DistributionContainer",

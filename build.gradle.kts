@@ -84,10 +84,10 @@ plugins {
     id("org.springframework.boot") version bootPlugin
     id("com.github.johnrengelman.shadow") version shadowPlugin
     id("com.github.ben-manes.versions") version gradleVersion
+    id("org.jlleitschuh.gradle.ktlint") version ktlintVersion
     id("us.kirchmeier.capsule") version "1.0.2"
     id("com.dorongold.task-tree") version "1.3"
     id("co.riiid.gradle") version "0.4.2"
-    // id("org.jlleitschuh.gradle.ktlint") version ktlintVersion
     // id("org.jetbrains.dokka") version dokkaPlugin
 }
 
