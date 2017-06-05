@@ -23,7 +23,8 @@
             "github": "co.riiid.gradle.GithubExtension",
             "distributions": "org.gradle.api.distribution.DistributionContainer",
             "idea": "org.gradle.plugins.ide.idea.model.IdeaModel",
-            "jacoco": "org.gradle.testing.jacoco.plugins.JacocoPluginExtension"
+            "jacoco": "org.gradle.testing.jacoco.plugins.JacocoPluginExtension",
+            "junitPlatform": "org.junit.platform.gradle.plugin.JUnitPlatformExtension"
         }
     }
 }

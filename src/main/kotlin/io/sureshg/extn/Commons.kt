@@ -17,7 +17,7 @@ import java.util.jar.Manifest
 import javax.crypto.Cipher
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 import kotlin.text.Charsets.US_ASCII
 import kotlin.text.Charsets.UTF_8
 
@@ -149,6 +149,11 @@ inline val String.base64DecodeBytes: ByteArray get() {
 }
 
 /**
+ * Trim the ASCII whitespace.
+ */
+fun String.trimAsciiWhitespace() = trim('\t', '\n', '\u000C', '\r', ' ')
+
+/**
  *  Create an MD5 hash of [ByteArray].
  */
 val ByteArray.md5 get() = hash(this, "MD5")
@@ -277,6 +282,18 @@ fun String.normalizeString(desiredLength: Int): String {
 }
 
 /**
+ * Centers the String in a larger String of size [size].
+ * Uses [padChar] as the value to pad the String.
+ */
+fun String.center(size: Int, padChar: Char = ' ') = when {
+    size > length -> {
+        val pads = (size - length) / 2
+        padStart(length + pads, padChar).padEnd(size, padChar)
+    }
+    else -> this
+}
+
+/**
  * Encrypt this string with AES-128 using the specified [key].
  * Ported from - https://goo.gl/J1H3e5
  *
@@ -365,3 +382,22 @@ enum class BuildInfo(val attr: String) {
  * Returns the [BuildInfo] attribute value from jar manifest [Attributes]
  */
 fun Attributes?.getVal(name: BuildInfo): String = this?.getValue(name.attr) ?: "N/A"
+
+/**
+ * Add property delegates which call get/set on the given KProperty reference
+ *
+ * var foo: String by ::fooImpl
+ *
+ * var fooImpl: String
+ *         get() = ...
+ *        set(value) { ... }
+ *
+ * @see - https://youtrack.jetbrains.com/issue/KT-8658
+ */
+operator fun <R> KProperty0<R>.getValue(instance: Nothing?, metadata: KProperty<*>): R = get()
+
+operator fun <R> KMutableProperty0<R>.setValue(instance: Nothing?, metadata: KProperty<*>, value: R) = set(value)
+
+operator fun <T, R> KProperty1<T, R>.getValue(instance: T, metadata: KProperty<*>): R = get(instance)
+
+operator fun <T, R> KMutableProperty1<T, R>.setValue(instance: T, metadata: KProperty<*>, value: R) = set(instance, value)

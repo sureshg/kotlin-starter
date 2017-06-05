@@ -202,6 +202,7 @@ fun String.bgGrayScale(code: Int) = grayScale(code, false)
  * 8-bit color functions.
  */
 inline val String.bold get() = color(1)
+inline val String.dim get() = color(2)
 inline val String.italic get() = color(3)
 inline val String.underline get() = color(4)
 inline val String.blink get() = color(5)
@@ -264,7 +265,12 @@ inline val String.dash get() = "[-] $this"
 /**
  * List item string.
  */
-inline val String.dot get() = "• $this"
+inline val String.dot get() = "\u25CF $this"
+
+/**
+ * Formatted string with dot.
+ */
+inline val String.circleDot get() = "\u25C9 $this"
 
 fun main(args: Array<String>) {
     "Kotlin".bold.underline.blue.p

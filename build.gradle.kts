@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
 import com.github.benmanes.gradle.versions.updates.*
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.apache.tools.ant.filters.ReplaceTokens
+import org.junit.platform.gradle.plugin.JUnitPlatformPlugin
 
 
 buildscript {
@@ -25,7 +26,6 @@ buildscript {
     var wrapperVersion: String by extra
     var kotlinEAPRepo: String by extra
     var kotlinxRepo: String by extra
-    var dokkaVersion: String by extra
     var springBootVersion: String by extra
 
     javaVersion = JavaVersion.VERSION_1_8
@@ -34,8 +34,9 @@ buildscript {
     wrapperVersion = "wrapper.version".sysProp
     kotlinEAPRepo = "kotlin.eap.repo".sysProp
     kotlinxRepo = "kotlinx.repo".sysProp
-    dokkaVersion = "dokka.version".sysProp
     springBootVersion = "springboot.version".sysProp
+    val junitVersion = "junit-plugin.version".sysProp
+    val dokkaVersion = "dokka.version".sysProp
 
     repositories {
         gradleScriptKotlin()
@@ -45,6 +46,7 @@ buildscript {
     dependencies {
         classpath("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion")
+        classpath("org.junit.platform:junit-platform-gradle-plugin:$junitVersion")
     }
 }
 
@@ -101,6 +103,7 @@ apply {
         from(it.name)
     }
     plugin<DokkaPlugin>()
+    plugin<JUnitPlatformPlugin>()
     plugin<DependencyManagementPlugin>()
 }
 
@@ -210,6 +213,7 @@ tasks.withType<JavaCompile> {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = javaVersion.toString()
+        // javaParameters = true
     }
 }
 
@@ -266,7 +270,11 @@ dependencies {
     compile("ru.gildor.coroutines:kotlin-coroutines-retrofit:0.5.0")
     compile("org.springframework.boot:spring-boot-starter")
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+    // compile("net.bytebuddy:byte-buddy:1.7.0")
     testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile("org.mockito:mockito-core:2.8.9")
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
     "testConfig"("com.google.code.findbugs:jsr305:3.0.2")
 }
 
