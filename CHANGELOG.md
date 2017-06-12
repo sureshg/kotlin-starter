@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Added
 
+## [1.2.0] - 2017-06-11
+### Changed
+- Misc fixes.
+
 ## [1.1.1] - 2017-05-29
 ### Added
 - Added Kotlin lint support. 
