@@ -41,6 +41,7 @@ buildscript {
     repositories {
         gradleScriptKotlin()
         maven { setUrl(kotlinxRepo) }
+        maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
     }
 
     dependencies {
