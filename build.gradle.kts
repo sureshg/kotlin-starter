@@ -77,12 +77,9 @@ plugins {
     maven
     jacoco
     `help-tasks`
-    id("org.jetbrains.kotlin.jvm") version ktPlugin
-    id("org.jetbrains.kotlin.kapt") version ktPlugin
-    id("org.jetbrains.kotlin.plugin.allopen") version ktPlugin
-    id("org.jetbrains.kotlin.plugin.noarg") version ktPlugin
-    id("org.jetbrains.kotlin.plugin.spring") version ktPlugin
-    id("org.jetbrains.kotlin.plugin.jpa") version ktPlugin
+    listOf("jvm", "kapt", "plugin.allopen", "plugin.noarg", "plugin.spring", "plugin.jpa").forEach {
+        kotlin(it, ktPlugin)
+    }
     id("org.springframework.boot") version bootPlugin
     id("com.github.johnrengelman.shadow") version shadowPlugin
     id("com.github.ben-manes.versions") version gradleVersion
@@ -258,8 +255,8 @@ subprojects {
 }
 
 dependencies {
-    compile("org.jetbrains.kotlin:kotlin-stdlib-jre8")
-    compile("org.jetbrains.kotlin:kotlin-reflect")
+    compile(kotlin("stdlib-jre8"))
+    compile(kotlin("reflect"))
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
     compile("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.1")
     compile("org.jetbrains.kotlinx:kotlin-sockets:0.0.10")
@@ -269,8 +266,8 @@ dependencies {
     compile("com.github.jnr:jnr-posix:3.0.41")
     compile("ru.gildor.coroutines:kotlin-coroutines-retrofit:0.5.0")
     compile("org.springframework.boot:spring-boot-starter")
-    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
     // compile("net.bytebuddy:byte-buddy:1.7.0")
+    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.mockito:mockito-core:2.8.9")
     testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")
