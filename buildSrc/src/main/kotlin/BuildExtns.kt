@@ -1,14 +1,14 @@
 import org.gradle.api.Project
-import org.gradle.api.Task
-import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.maven.MavenPom
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.plugins.MavenPluginConvention
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
-import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
-import org.gradle.script.lang.kotlin.*
+import org.gradle.kotlin.dsl.embeddedKotlinVersion
+import org.gradle.kotlin.dsl.extra
+import org.gradle.kotlin.dsl.get
+import org.gradle.kotlin.dsl.the
 import term.bold
 import term.cyan
 import term.fg256
@@ -23,20 +23,38 @@ import kotlin.coroutines.experimental.buildSequence
  * @author Suresh
  */
 
-val String.sysProp: String get() = System.getProperty(this, "")
+/**
+ * Returns the system property value of given string.
+ */
+fun sysProp(name: String, default: String = ""): String = System.getProperty(name, default)
 
-fun sysprop(name: String): String? = System.getProperty(name)
+val GradleSnapShotURL = sysProp("gradle.snap.url")
+val kotlinSysProp = sysProp("kotlin.version")
+val kotlinxSysProp = sysProp("kotlinx.version")
+val dokkaSysProp = sysProp("dokka.version")
+val springBootSysProp = sysProp("springboot.version")
+val shadowSysProp = sysProp("shadow.version")
+val buildScanSysProp = sysProp("build-scan.version")
+val ktlintSysProp = sysProp("ktlint.version")
+val versionsSysProp = sysProp("gradle-versions.version")
+val wrapperSysProp = sysProp("wrapper.version")
+val junitSysProp = sysProp("junit-plugin.version")
+val kotlinEapRepoSysProp = sysProp("kotlin.eap.repo")
+val kotlinxRepoSysProp = sysProp("kotlinx.repo")
 
-val GRADLE_SNAPSHOT_URL = "gradle.snap.url".sysProp
+/**
+ * Visit the [plugin portal](https://plugins.gradle.org/search?term=org.jetbrains.kotlin) to see the list of available plugins.
+ */
+val kotlinPlugins = listOf("jvm", "kapt", "plugin.allopen", "plugin.noarg", "plugin.spring", "plugin.jpa")
 
-fun getGskURL(version: String, type: DistributionType = ALL) = "$GRADLE_SNAPSHOT_URL/gradle-script-kotlin-$version-${type.name.toLowerCase()}.zip"
+fun gradleKotlinDslUrl(version: String, type: DistributionType = DistributionType.ALL) = "$GradleSnapShotURL/$version-${type.name.toLowerCase()}.zip"
 
-val buildDateTime: String by lazy { ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a z")) }
+val buildDateTime by lazy { ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a z")) }
 
 /**
  * Returns [true] if it's running on IntelliJ IDEs.
  */
-val isIdea = "idea.executable".sysProp == "idea"
+val isIdea = sysProp("idea.executable") == "idea"
 
 /**
  * Really Executable Jar header.
@@ -62,7 +80,7 @@ val EXEC_JAR_HEADER = """|#!/bin/sh
  */
 val githubRepo by lazy {
     val repoUrlRegex = "(git|ssh|https?)(?:@|://)([\\w.-]+)[:/]([\\w.-]+)/([\\w-]+)(?:\\.git)?".toRegex()
-    val repoUrl = "github.repo.url".sysProp
+    val repoUrl = sysProp("github.repo.url")
     repoUrlRegex.find(repoUrl, 0)?.groups?.let {
         GithubRepo(proto = it[1]!!.value,
                 baseUrl = it[2]!!.value,
@@ -76,9 +94,9 @@ val githubRepo by lazy {
  */
 fun Project.printHeader(version: Any?, embdKtVersion: String = embeddedKotlinVersion) {
     val header = """|======================
-                    |Kotlin Starter v$version
-                    |======================
-                 """.trimMargin()
+                           |Kotlin Starter v$version
+                           |======================
+                         """.trimMargin()
     println(header.bold.cyan)
     println("\nEmbedded kotlin version: $embdKtVersion".fg256())
     println("Configured project properties are,")
@@ -144,7 +162,7 @@ fun Project.getEnv(envVar: String, mask: Boolean = true): String {
 fun Project.showTaskGraph() {
     println("└── Task graph".cyan)
     gradle.taskGraph.whenReady {
-        it.allTasks.forEach {
+        allTasks.forEach {
             println("    └── $it".fg256())
         }
     }
@@ -162,28 +180,6 @@ fun fib() = buildSequence {
         a = b
         b = next
     }
-}
-
-/**
- * Returns fully qualified Kotlinx module name.
- */
-fun DependencyHandler.kotlinxModule(module: String, version: String) = "org.jetbrains.kotlinx:${if (module.startsWith("kotlin", true)) "" else "kotlinx-"}$module:$version"
-
-/**
- * Extension function to create new task.
- */
-inline fun <reified T : Task> Project.task(noinline config: T.() -> Unit) = tasks.creating(T::class, config)
-
-/**
- * Dokka output format.
- */
-enum class DokkaFormat(val type: String, val desc: String) {
-    Html("html", "HTML Doc"),
-    KotlinWeb("kotlin-website", "Kotlin Website"),
-    Markdown("markdown", "Markdown(md) doc"),
-    Gfm("gfm", "GitHub-Flavored Markdown"),
-    Jekyll("jekyll", "Markdown adapted for Jekyll sites"),
-    JavaDoc("javadoc", "Javadoc format")
 }
 
 /**
@@ -230,4 +226,17 @@ data class GithubRepo(val proto: String,
         }
         return "$url/blob/$branch/CHANGELOG.md$suffix"
     }
+}
+
+/**
+ * Dokka output format.
+ */
+enum class DokkaFormat(val type: String, val desc: String) {
+    Html("html", "HTML Doc"),
+    HtmlAsJava("html-as-java", "Html using java syntax"),
+    KotlinWeb("kotlin-website", "Kotlin Website"),
+    Markdown("markdown", "Markdown(md) doc"),
+    Gfm("gfm", "GitHub-Flavored Markdown"),
+    Jekyll("jekyll", "Markdown adapted for Jekyll sites"),
+    JavaDoc("javadoc", "Javadoc format")
 }

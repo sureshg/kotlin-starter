@@ -1,6 +1,8 @@
+import sun.misc.HexDumpEncoder
 import java.io.File
 import java.io.IOException
 import java.net.JarURLConnection
+import java.net.URL
 import java.nio.file.FileVisitResult
 import java.nio.file.Files
 import java.nio.file.Path
@@ -9,6 +11,7 @@ import java.nio.file.attribute.BasicFileAttributes
 import java.security.MessageDigest
 import java.util.*
 import java.util.jar.Attributes
+import java.util.jar.Attributes.Name.*
 import java.util.jar.Manifest
 import javax.crypto.Cipher
 import javax.crypto.Mac
@@ -16,9 +19,6 @@ import javax.crypto.spec.SecretKeySpec
 import kotlin.reflect.KClass
 import kotlin.text.Charsets.US_ASCII
 import kotlin.text.Charsets.UTF_8
-import sun.misc.HexDumpEncoder
-import java.net.URL
-import java.util.jar.Attributes.Name.*
 
 /**
  * Common extension functions.

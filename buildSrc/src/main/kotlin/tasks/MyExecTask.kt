@@ -1,21 +1,30 @@
 package tasks
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.Project
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
+import org.gradle.kotlin.dsl.*
 
 /**
- * An exec task.
+ * A custom exec task.
  */
 open class MyExecTask : DefaultTask() {
+
+    init {
+        group = "misc"
+        description = "Custom Exec Task for ${project.name}"
+    }
+
     @Input var command = listOf("ls")
 
-    override fun getDescription() = "MyExecTask for ${project.name}"
-
     @TaskAction fun run() {
+        println("Executing $command for ${this.project.name}.")
         project.exec {
-            it.workingDir = project.buildDir
-            it.commandLine = command
+            workingDir = project.buildDir
+            commandLine = command
         }
     }
 }
+
+fun Project.myExecTask() = task<MyExecTask>("myExecTask")
