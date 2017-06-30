@@ -8,7 +8,6 @@ import kotlinx.coroutines.experimental.*
  *
  * @author Suresh G (@sur3shg)
  */
-
 fun main(args: Array<String>) {
     runBlocking {
         launch(CommonPool) {
@@ -18,7 +17,7 @@ fun main(args: Array<String>) {
         print("Hello, ")
         delay(1000)
     }
-
+    println((1..100).shuffled().windowed(25, 10) { it.sum() })
     val list1 = immutableListOf("Kotlin", "Java", "Scala", "Clojure", "Ceylon")
     val list2 = list1.mutate { it.add("Groovy") }
     val list3 = list2 - "Groovy"
