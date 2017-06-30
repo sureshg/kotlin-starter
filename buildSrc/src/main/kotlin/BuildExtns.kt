@@ -5,10 +5,7 @@ import org.gradle.api.plugins.MavenPluginConvention
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
-import org.gradle.kotlin.dsl.embeddedKotlinVersion
-import org.gradle.kotlin.dsl.extra
-import org.gradle.kotlin.dsl.get
-import org.gradle.kotlin.dsl.the
+import org.gradle.kotlin.dsl.*
 import term.bold
 import term.cyan
 import term.fg256
@@ -119,7 +116,7 @@ fun MavenPluginConvention.mvnpom(config: MavenPom.() -> Unit) = pom().apply(conf
 fun Project.sourceSets(block: SourceSetContainer.() -> Unit) = the<JavaPluginConvention>().sourceSets.apply(block)
 
 /**
- * Main and test source config extensions.
+ * Main and test source set extensions.
  */
 val SourceSetContainer.main: SourceSet get() = this["main"]
 val SourceSetContainer.test: SourceSet get() = this["test"]
