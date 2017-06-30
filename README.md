@@ -4,7 +4,7 @@
 
  [![version][release-svg]][release-url] [![changelog][cl-svg]][cl-url] [![build][travis-svg]][travis-url] [![api-doc][apidoc-svg]][apidoc-url] [![gitter][gitter-svg]][gitter-url] [![license][license-svg]][license-url] [![kotlin][kotlin-svg]][kotlin-url] 
 
- A starter template for my [kotlin][kotlin-url] projects using [Gradle Script Kotlin][gsk]!
+ A starter template for my [kotlin][kotlin-url] projects using [Gradle Kotlin DSL][kotlin-dsl]!
  
 </div>
 
@@ -29,7 +29,7 @@
     ```
     > The binary would be located at `build/libs/kotlin-starter`
     
-    Inorder to build a new version, change `appVersion` in the [gradle.properties](gradle.properties) or pass it to `./gradlew -q -PappVersion=1.2.0`
+    Inorder to build a new version, change `appVersion` in the [gradle.properties](gradle.properties) or pass it to `./gradlew -q -PappVersion=2.0.0`
 
 * API Doc
 
@@ -63,10 +63,10 @@
 
 ### Examples
 
-* Generating [AOT type-safe accessors][gsk-aot-doc] in kotlin, 
+* Generating [AOT type-safe accessors][kotlin-dsl-aot-doc] in kotlin, 
 
     ```bash
-    $ ./gradlew gskGenerateAccessors
+    $ ./gradlew kotlinDslAccessorsSnapshot
     ```
 
 * Other Tasks
@@ -102,15 +102,15 @@
 [apidoc-url]: https://sureshg.github.io/kotlin-starter/
 [apidoc-svg]: https://img.shields.io/badge/api--doc-latest-ff69b4.svg?style=flat-square
 
-[cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md#120---2017-06-11
-[cl-svg]: https://img.shields.io/badge/change--log-1.2.0-blue.svg?style=flat-square
+[cl-url]: https://github.com/sureshg/kotlin-starter/blob/master/CHANGELOG.md#200---2017-06-29
+[cl-svg]: https://img.shields.io/badge/change--log-2.0.0-blue.svg?style=flat-square
 
 [release-url]: https://github.com/sureshg/kotlin-starter/releases/latest
-[download-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.2.0/kotlin-starter
+[download-url]: https://github.com/sureshg/kotlin-starter/releases/download/2.0.0/kotlin-starter
 [release-svg]: https://img.shields.io/github/release/sureshg/kotlin-starter.svg?style=flat-square
 
-[execjar-url]: https://github.com/sureshg/kotlin-starter/releases/download/1.2.0/kotlin-starter.jar
-[execjar-svg]: https://img.shields.io/badge/exec--jar-1.2.0-00BCD4.svg?style=flat-square
+[execjar-url]: https://github.com/sureshg/kotlin-starter/releases/download/2.0.0/kotlin-starter.jar
+[execjar-svg]: https://img.shields.io/badge/exec--jar-2.0.0-00BCD4.svg?style=flat-square
 
 [license-url]: https://github.com/sureshg/kotlin-starter/blob/master/LICENSE
 [license-svg]: https://img.shields.io/github/license/sureshg/kotlin-starter.svg?style=flat-square
@@ -131,10 +131,10 @@
 [gitter-svg]: https://img.shields.io/gitter/room/sureshg/kotlin-starter.svg
 
 [kotlin-url]: https://kotlinlang.org/
-[kotlin-svg]: https://img.shields.io/badge/kotlin-1.1.2--2-green.svg?style=flat-square
+[kotlin-svg]: https://img.shields.io/badge/kotlin-1.2--M1-green.svg?style=flat-square
 
-[gsk]: https://github.com/gradle/gradle-script-kotlin
-[gsk-aot-doc]: https://github.com/gradle/gradle-script-kotlin/releases/tag/v0.8.0
+[kotlin-dsl]: https://github.com/gradle/kotlin-dsl
+[kotlin-dsl-aot-doc]: https://github.com/gradle/kotlin-dsl/releases/tag/v0.8.0
 
 [kotlin-slack-thread]: https://kotlinlang.slack.com/archives/gradle/p1488489798002208
 [maven-google-mirror]: https://maven-central.storage.googleapis.com
