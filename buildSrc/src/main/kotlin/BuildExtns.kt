@@ -42,7 +42,7 @@ val kotlinxRepoSysProp = sysProp("kotlinx.repo")
 /**
  * Visit the [plugin portal](https://plugins.gradle.org/search?term=org.jetbrains.kotlin) to see the list of available plugins.
  */
-val kotlinPlugins = listOf("jvm", "kapt", "plugin.allopen", "plugin.noarg", "plugin.spring", "plugin.jpa")
+val kotlinPlugins = listOf("jvm", "kapt", "plugin.allopen", "plugin.noarg", "plugin.spring", "plugin.jpa").map { "org.jetbrains.kotlin.$it" }
 
 fun gradleKotlinDslUrl(version: String, type: DistributionType = DistributionType.ALL) = "$GradleSnapShotURL/$version-${type.name.toLowerCase()}.zip"
 

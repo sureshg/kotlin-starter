@@ -75,9 +75,7 @@ apply {
     }.forEach {
         from(it.name)
     }
-    kotlinPlugins.forEach {
-        plugin("org.jetbrains.kotlin.$it")
-    }
+    kotlinPlugins.forEach { plugin(it) }
     plugin<BookPlugin>()
     plugin<JUnitPlatformPlugin>()
     plugin<DependencyManagementPlugin>()
