@@ -4,7 +4,7 @@
 
  [![version][release-svg]][release-url] [![changelog][cl-svg]][cl-url] [![build][travis-svg]][travis-url] [![api-doc][apidoc-svg]][apidoc-url] [![gitter][gitter-svg]][gitter-url] [![license][license-svg]][license-url] [![kotlin][kotlin-svg]][kotlin-url] 
 
- A starter template for my [kotlin][kotlin-url] projects using [Gradle Script Kotlin][gsk]!
+ A starter template for my [kotlin][kotlin-url] projects using [Gradle Kotlin DSL][kotlin-dsl]!
  
 </div>
 
@@ -63,10 +63,10 @@
 
 ### Examples
 
-* Generating [AOT type-safe accessors][gsk-aot-doc] in kotlin, 
+* Generating [AOT type-safe accessors][kotlin-dsl-aot-doc] in kotlin, 
 
     ```bash
-    $ ./gradlew gskGenerateAccessors
+    $ ./gradlew kotlinDslAccessorsSnapshot
     ```
 
 * Other Tasks
@@ -133,8 +133,8 @@
 [kotlin-url]: https://kotlinlang.org/
 [kotlin-svg]: https://img.shields.io/badge/kotlin-@kotlinBadge@-green.svg?style=flat-square
 
-[gsk]: https://github.com/gradle/gradle-script-kotlin
-[gsk-aot-doc]: https://github.com/gradle/gradle-script-kotlin/releases/tag/v0.8.0
+[kotlin-dsl]: https://github.com/gradle/kotlin-dsl
+[kotlin-dsl-aot-doc]: https://github.com/gradle/kotlin-dsl/releases/tag/v0.8.0
 
 [kotlin-slack-thread]: https://kotlinlang.slack.com/archives/gradle/p1488489798002208
 [maven-google-mirror]: https://maven-central.storage.googleapis.com

@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Added
 
+## [2.0.0] - 2017-06-29
+### Changed
+- Upgraded to Updated to `Kotlin 1.2-M1` and [Gradle Kotlin DSL][kotlin-dsl] `4.1-20170624053347`
+- Many changes to buildscript to use new kotlin dsl.
+
 ## [1.2.0] - 2017-06-11
 ### Changed
 - Misc fixes.
@@ -19,7 +24,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Maven Pom file generation.
 
 ### Changed
-- Upgrade to GSK 0.9.0
+- Upgrade to Gradle Kotlin DSL 0.9.0
 
 ## [1.0.9] - 2017-05-17
 ### Added
@@ -48,10 +53,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Auto publish [API doc][apidoc-url] site.
 
 ### Changed
-- Updated to `Kotlin 1.1.2-2` and [GSK][gsk] `4.0-20170504144001+0000`
+- Updated to `Kotlin 1.1.2-2` and [Gradle Kotlin DSL][kotlin-dsl] `4.0-20170504144001+0000`
 
 
-[Unreleased]: https://github.com/sureshg/kotlin-starter/compare/1.2.0...HEAD
+[Unreleased]: https://github.com/sureshg/kotlin-starter/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/sureshg/kotlin-starter/compare/1.2.0...2.0.0
 [1.2.0]: https://github.com/sureshg/kotlin-starter/compare/1.1.1...1.2.0
 [1.1.1]: https://github.com/sureshg/kotlin-starter/compare/1.1.0...1.1.1
 [1.1.0]: https://github.com/sureshg/kotlin-starter/compare/1.0.9...1.1.0
@@ -61,7 +67,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 [1.0.6]: https://github.com/sureshg/kotlin-starter/compare/1.0.5...1.0.6
 [1.0.5]: https://github.com/sureshg/kotlin-starter/compare/1.0.4...1.0.5
 
-[gsk]: https://github.com/gradle/gradle-script-kotlin
+[kotlin-dsl]: https://github.com/gradle/kotlin-dsl
 [apidoc-url]: https://sureshg.github.io/kotlin-starter/
 [github-release]: https://help.github.com/articles/creating-releases/
 
