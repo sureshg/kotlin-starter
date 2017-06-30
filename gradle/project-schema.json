@@ -9,13 +9,9 @@
         "extensions": {
             "ext": "org.gradle.api.plugins.ExtraPropertiesExtension",
             "buildScan": "com.gradle.scan.plugin.internal.api.f",
-            "kotlin": "org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension",
-            "kapt": "org.jetbrains.kotlin.gradle.plugin.KaptExtension",
+            "springBoot": "org.springframework.boot.gradle.SpringBootPluginExtension",
             "defaultArtifacts": "org.gradle.api.internal.plugins.DefaultArtifactPublicationSet",
             "reporting": "org.gradle.api.reporting.ReportingExtension",
-            "allOpen": "org.jetbrains.kotlin.allopen.gradle.AllOpenExtension",
-            "noArg": "org.jetbrains.kotlin.noarg.gradle.NoArgExtension",
-            "springBoot": "org.springframework.boot.gradle.SpringBootPluginExtension",
             "dependencyManagement": "io.spring.gradle.dependencymanagement.internal.dsl.StandardDependencyManagementExtension",
             "shadow": "com.github.jengelman.gradle.plugins.shadow.ShadowExtension",
             "ktlint": "org.jlleitschuh.gradle.ktlint.KtlintExtension",
@@ -24,6 +20,11 @@
             "distributions": "org.gradle.api.distribution.DistributionContainer",
             "idea": "org.gradle.plugins.ide.idea.model.IdeaModel",
             "jacoco": "org.gradle.testing.jacoco.plugins.JacocoPluginExtension",
+            "kotlin": "org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension",
+            "kapt": "org.jetbrains.kotlin.gradle.plugin.KaptExtension",
+            "allOpen": "org.jetbrains.kotlin.allopen.gradle.AllOpenExtension",
+            "noArg": "org.jetbrains.kotlin.noarg.gradle.NoArgExtension",
+            "books": "org.gradle.api.NamedDomainObjectContainer<plugins.Book>",
             "junitPlatform": "org.junit.platform.gradle.plugin.JUnitPlatformExtension"
         }
     }
