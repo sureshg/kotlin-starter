@@ -1,94 +1,69 @@
 import term.*
 import BuildInfo.*
+import plugins.*
+import org.gradle.kotlin.dsl.*
 import org.gradle.jvm.tasks.Jar
 import co.riiid.gradle.ReleaseTask
-import org.jetbrains.kotlin.gradle.dsl.Coroutines.ENABLE
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import kotlinx.coroutines.experimental.*
+import us.kirchmeier.capsule.task.*
 import us.kirchmeier.capsule.manifest.CapsuleManifest
 import us.kirchmeier.capsule.spec.ReallyExecutableSpec
-import us.kirchmeier.capsule.task.*
-import kotlinx.coroutines.experimental.*
+import org.jetbrains.kotlin.gradle.dsl.Coroutines.ENABLE
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.internal.HasConvention
+import org.apache.tools.ant.filters.ReplaceTokens
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import org.junit.platform.gradle.plugin.JUnitPlatformPlugin
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
 import org.jetbrains.dokka.gradle.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
-import com.github.benmanes.gradle.versions.updates.*
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.apache.tools.ant.filters.ReplaceTokens
-import org.junit.platform.gradle.plugin.JUnitPlatformPlugin
-
 
 buildscript {
-    var javaVersion: JavaVersion by extra
-    var kotlinVersion: String by extra
-    var kotlinxVersion: String by extra
-    var wrapperVersion: String by extra
-    var kotlinEAPRepo: String by extra
-    var kotlinxRepo: String by extra
-    var springBootVersion: String by extra
-
-    javaVersion = JavaVersion.VERSION_1_8
-    kotlinVersion = "kotlin.version".sysProp
-    kotlinxVersion = "kotlinx.version".sysProp
-    wrapperVersion = "wrapper.version".sysProp
-    kotlinEAPRepo = "kotlin.eap.repo".sysProp
-    kotlinxRepo = "kotlinx.repo".sysProp
-    springBootVersion = "springboot.version".sysProp
-    val junitVersion = "junit-plugin.version".sysProp
-    val dokkaVersion = "dokka.version".sysProp
-
     repositories {
-        gradleScriptKotlin()
-        maven { setUrl(kotlinxRepo) }
-        maven { setUrl("https://dl.bintray.com/kotlin/kotlin-eap") }
+        jcenter()
+        maven { setUrl(kotlinEapRepoSysProp) }
     }
-
     dependencies {
-        classpath("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
-        classpath("org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion")
-        classpath("org.junit.platform:junit-platform-gradle-plugin:$junitVersion")
+        // Require only for EAPs
+        listOf("kotlin-gradle-plugin", "kotlin-allopen", "kotlin-noarg").forEach {
+            classpath("org.jetbrains.kotlin:$it:$kotlinSysProp")
+        }
+        classpath("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxSysProp")
+        classpath("org.junit.platform:junit-platform-gradle-plugin:$junitSysProp")
     }
 }
 
 val appVersion by project
 val appAuthor by project
-val javaVersion: JavaVersion by extra
-val kotlinVersion: String by extra
-val kotlinxVersion: String by extra
-val springBootVersion: String by extra
-val kotlinxRepo: String by extra
-val kotlinEAPRepo: String by extra
-val wrapperVersion: String by extra
+val javaVersion: JavaVersion by extra { JavaVersion.VERSION_1_8 }
+val kotlinVersion: String by extra { kotlinSysProp }
+val kotlinxVersion: String by extra { kotlinxSysProp }
+val wrapperVersion: String by extra { wrapperSysProp }
+val kotlinEAPRepo: String by extra { kotlinEapRepoSysProp }
+val kotlinxRepo: String by extra { kotlinxRepoSysProp }
+val springBootVersion: String by extra { springBootSysProp }
 printHeader(appVersion)
 
 plugins {
-    val ktPlugin = "kotlin.version".sysProp
-    val dokkaPlugin = "dokka.version".sysProp
-    val bootPlugin = "springboot.version".sysProp
-    val shadowPlugin = "shadow.version".sysProp
-    val buildScan = "build-scan.version".sysProp
-    val ktlintVersion = "ktlint.version".sysProp
-    val gradleVersion = "gradle-versions.version".sysProp
-
-    id("com.gradle.build-scan") version buildScan
+    id("com.gradle.build-scan") version buildScanSysProp
     application
     java
     idea
     maven
     jacoco
     `help-tasks`
-    listOf("jvm", "kapt", "plugin.allopen", "plugin.noarg", "plugin.spring", "plugin.jpa").forEach {
-        kotlin(it, ktPlugin)
-    }
-    id("org.springframework.boot") version bootPlugin
-    id("com.github.johnrengelman.shadow") version shadowPlugin
-    id("com.github.ben-manes.versions") version gradleVersion
-    id("org.jlleitschuh.gradle.ktlint") version ktlintVersion
+    // For stable versions,
+    // kotlin(it, kotlinSysProp)
+    id("org.springframework.boot") version springBootSysProp
+    id("com.github.johnrengelman.shadow") version shadowSysProp
+    id("com.github.ben-manes.versions") version versionsSysProp
+    id("org.jlleitschuh.gradle.ktlint") version ktlintSysProp
+    id("org.jetbrains.dokka") version dokkaSysProp
     id("us.kirchmeier.capsule") version "1.0.2"
     id("com.dorongold.task-tree") version "1.3"
     id("co.riiid.gradle") version "0.4.2"
-    // id("org.jetbrains.dokka") version dokkaPlugin
 }
 
 /**
@@ -100,16 +75,17 @@ apply {
     }.forEach {
         from(it.name)
     }
-    plugin<DokkaPlugin>()
+    kotlinPlugins.forEach {
+        plugin("org.jetbrains.kotlin.$it")
+    }
+    plugin<BookPlugin>()
     plugin<JUnitPlatformPlugin>()
     plugin<DependencyManagementPlugin>()
 }
 
-base {
-    group = "io.sureshg"
-    version = appVersion
-    description = "Gradle script kotlin starter!"
-}
+group = "io.sureshg"
+version = appVersion
+description = "Gradle Kotlin DSL starter!"
 
 /**
  * Configure java compiler options.
@@ -148,6 +124,22 @@ buildScan {
 }
 
 /**
+ * Custom plugin.
+ */
+books.invoke {
+    "quickStart" {
+        sourceFile = file("quick-start.pdf")
+    }
+    "userGuide" {
+
+    }
+    "developerGuide" {
+
+    }
+}
+
+
+/**
  * A Configuration represents a group of artifacts and their dependencies.
  */
 configurations {
@@ -156,6 +148,7 @@ configurations {
         isTransitive = false
     }
 }
+
 
 /**
  * Maven pom config. Can use [GenerateMavenPom] if you are
@@ -238,9 +231,9 @@ tasks.withType<DependencyUpdatesTask> {
 }
 
 repositories {
-    gradleScriptKotlin()
     maven { setUrl(kotlinEAPRepo) }
     maven { setUrl(kotlinxRepo) }
+    jcenter()
     mavenCentral()
 }
 
@@ -251,26 +244,26 @@ repositories {
  */
 subprojects {
     buildscript.repositories {
+        jcenter()
         mavenCentral()
     }
 }
 
 dependencies {
-    compile(kotlin("stdlib-jre8"))
-    compile(kotlin("reflect"))
+    compile(kotlin("stdlib-jre8", kotlinVersion))
+    compile(kotlin("reflect", kotlinVersion))
     compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
     compile("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.1")
-    compile("org.jetbrains.kotlinx:kotlin-sockets:0.0.10")
     compile("com.squareup.retrofit2:retrofit:2.3.0")
     compile("net.jodah:failsafe:1.0.4")
     compile("com.squareup.moshi:moshi:1.5.0")
     compile("com.github.jnr:jnr-posix:3.0.41")
-    compile("ru.gildor.coroutines:kotlin-coroutines-retrofit:0.5.0")
+    compile("ru.gildor.coroutines:kotlin-coroutines-retrofit:0.5.1")
     compile("org.springframework.boot:spring-boot-starter")
     // compile("net.bytebuddy:byte-buddy:1.7.0")
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
     testCompile("org.springframework.boot:spring-boot-starter-test")
-    testCompile("org.mockito:mockito-core:2.8.9")
+    testCompile("org.mockito:mockito-core:2.8.47")
     testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
     "testConfig"("com.google.code.findbugs:jsr305:3.0.2")
@@ -307,9 +300,9 @@ tasks.withType<Jar> {
         attributes(mapOf(
                 Author.attr to appAuthor,
                 Date.attr to buildDateTime,
-                JDK.attr to "java.version".sysProp,
+                JDK.attr to sysProp("java.version"),
                 BuildTarget.attr to javaVersion,
-                OS.attr to "${"os.name".sysProp} ${"os.version".sysProp}",
+                OS.attr to "${sysProp("os.name")} ${sysProp("os.version")}",
                 KotlinVersion.attr to kotlinVersion,
                 CreatedBy.attr to "Gradle ${gradle.gradleVersion}",
                 AppVersion.attr to appVersion,
@@ -337,8 +330,8 @@ val capsuleTask = task<FatCapsule>("makeExecutable") {
     val appName = application.applicationName
     val appMainClass = application.mainClassName
     archiveName = appName
-    reallyExecutable = ReallyExecutableSpec().regular()
-    capsuleManifest = CapsuleManifest().apply {
+    reallyExecutable(closureOf<ReallyExecutableSpec> { regular() })
+    capsuleManifest(closureOf<CapsuleManifest> {
         premainClass = "Capsule"
         mainClass = "Capsule"
         applicationName = appName
@@ -347,7 +340,7 @@ val capsuleTask = task<FatCapsule>("makeExecutable") {
         jvmArgs = listOf("-client", "-Djava.security.egd=file:/dev/./urandom")
         args = listOf("$*")
         minJavaVersion = minJavaVer
-    }
+    })
     description = "Create $archiveName executable."
     dependsOn("clean", "shadowJar")
 
@@ -467,17 +460,6 @@ tasks.withType<ReleaseTask> {
     dependsOn("makeExecutable")
 }
 
-/**
- * Generate Gradle Script Kotlin wrapper.
- */
-task<Wrapper>("wrapper") {
-    description = "Generate Gradle Script Kotlin wrapper v$wrapperVersion"
-    distributionType = Wrapper.DistributionType.ALL
-    distributionUrl = getGskURL(wrapperVersion)
-    doFirst {
-        println(description)
-    }
-}
 
 /**
  * A tasks using coroutines.
@@ -495,7 +477,7 @@ task("async") {
         runBlocking {
             launch(CommonPool) {
                 delay(2000)
-                println("Gradle Script Kotlin!")
+                println("Gradle Kotlin DSL!")
             }
             print("Hello, ")
             delay(2000)
@@ -504,7 +486,22 @@ task("async") {
     }
 }
 
+
+/**
+ * Generate Gradle Kotlin DSL wrapper.
+ */
+task<Wrapper>("wrapper") {
+    description = "Generate Gradle Kotlin DSL wrapper ${wrapperVersion.bold}"
+    distributionType = Wrapper.DistributionType.ALL
+    distributionUrl = gradleKotlinDslUrl(wrapperVersion)
+    doFirst {
+        println(description)
+    }
+}
+
 /**
  * Set default task
  */
 defaultTasks("clean", "tasks", "--all")
+
+
